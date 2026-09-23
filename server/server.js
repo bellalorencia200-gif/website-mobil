@@ -5,6 +5,8 @@ import categoryRoutes from "./routes/categoryRoutes.js";
 import mobilRoutes from "./routes/mobilRoutes.js";
 import cors from "cors";
 import userRoutes from "./routes/userRoutes.js";
+import settingsRoutes from "./routes/settingsRoutes.js";
+import testimoniRoutes from "./routes/testimoniRoutes.js";
 
 const app = express();
 
@@ -14,6 +16,8 @@ app.use("/api/auth", authRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/mobil", mobilRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/settings", settingsRoutes);
+app.use("/api/testimoni", testimoniRoutes);
 
 app.get("/api/test", verifyToken, (req, res) => {
   res.json({

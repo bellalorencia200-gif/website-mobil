@@ -199,6 +199,32 @@ const Admin = () => {
               Kelola User
             </NavLink>
           </li>
+          <li>
+          <NavLink
+              to="/admin/lokasi"
+              onClick={tutupMenu}
+              className={({ isActive }) =>
+                isActive
+                  ? "btn bg-white text-red-700 w-full mb-1"
+                  : "btn bg-red-700 text-white hover:bg-red-800 w-full mb-1"
+              }
+            >
+              Pengaturan Lokasi
+            </NavLink>
+            </li>
+             <li>
+            <NavLink
+              to="/admin/testimoni"
+              onClick={tutupMenu}
+              className={({ isActive }) =>
+                isActive
+                  ? "btn bg-white text-red-700 w-full mb-1"
+                  : "btn bg-red-700 text-white hover:bg-red-800 w-full mb-1"
+              }
+            >
+              Kelola Testimoni
+            </NavLink>
+          </li>
         </ul>
         <div className="mt-auto pt-6 border-t border-red-400">
           <p className="text-white text-sm font-semibold">Halo, Admin</p>
