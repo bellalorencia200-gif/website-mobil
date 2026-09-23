@@ -1,8 +1,126 @@
+/* ========================================
+   GOOGLE FONTS
+======================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap');
+
+
+/* ========================================
+   TAILWIND CSS
+======================================== */
+
 @import "tailwindcss";
+
+
+/* ========================================
+   DAISY UI
+======================================== */
+
 @plugin "daisyui" {
   themes: light --default;
 }
 
+
+/* ========================================
+   CUSTOM THEME
+======================================== */
+
 @theme {
+
+  /* FONT */
+  --font-serif: "Playfair Display", serif;
+  --font-sans: "Montserrat", sans-serif;
   --font-explora: "Explora", cursive;
+
+  /* ANIMATION */
+  --animate-slide-left: slideLeft 25s linear infinite;
+  --animate-slide-right: slideRight 25s linear infinite;
+
+}
+
+
+/* ========================================
+   KEYFRAMES
+======================================== */
+
+/* SLIDE LEFT */
+
+@keyframes slideLeft {
+
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+
+}
+
+
+/* SLIDE RIGHT */
+
+@keyframes slideRight {
+
+  0% {
+    transform: translateX(-50%);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+
+}
+
+
+/* SHINE EFFECT */
+
+@keyframes shine {
+
+  0% {
+    transform: translateX(-120%) skewX(-12deg);
+  }
+
+  100% {
+    transform: translateX(220%) skewX(-12deg);
+  }
+
+}
+
+
+/* BORDER GLOW */
+
+@keyframes borderGlow {
+
+  0%,
+  100% {
+
+    box-shadow:
+      0 0 0 1px rgba(217, 168, 92, 0.35),
+      0 0 10px rgba(217, 168, 92, 0.15);
+
+  }
+
+  50% {
+
+    box-shadow:
+      0 0 0 1px rgba(217, 168, 92, 0.7),
+      0 0 18px rgba(217, 168, 92, 0.45);
+
+  }
+
+}
+
+
+/* ========================================
+   SCROLLBAR
+======================================== */
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
