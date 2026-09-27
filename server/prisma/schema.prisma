@@ -43,6 +43,7 @@ transmisi String @default("Manual")
 bahanBakar String @default("Bensin")
 kapasitasMesin Int @default(0)
 warna String @default("-")
+isPromo Boolean @default(false)
 category   Category  @relation(fields: [categoryId], references: [id])
 }
 

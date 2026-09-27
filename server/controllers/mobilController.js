@@ -18,6 +18,7 @@ export const createMobil = async (req, res) => {
     bahanBakar,
     kapasitasMesin,
     warna,
+    isPromo,
   } = req.body;
   if (!nama || !tahun || !harga || !stok || !categoryId || !deskripsi) {
     return res
@@ -56,7 +57,8 @@ export const createMobil = async (req, res) => {
       bahanBakar: bahanBakar || undefined,
       kapasitasMesin:
         kapasitasMesin !== undefined ? Number(kapasitasMesin) : undefined,
-      warna: warna || undefined,
+     warna: warna || undefined,
+      isPromo: isPromo === "true" || isPromo === true,
       category: {
         connect: { id: categoryId },
       },
@@ -116,6 +118,7 @@ export const updateMobil = async (req, res) => {
     bahanBakar,
     kapasitasMesin,
     warna,
+    isPromo,
   } = req.body;
   try {
     const mobil = await prisma.mobil.findUnique({
@@ -179,8 +182,9 @@ export const updateMobil = async (req, res) => {
         bahanBakar: bahanBakar || undefined,
         kapasitasMesin:
           kapasitasMesin !== undefined ? Number(kapasitasMesin) : undefined,
-        warna: warna || undefined,
-        category: {
+       warna: warna || undefined,
+      isPromo: isPromo === "true" || isPromo === true,
+      category: {
           connect: { id: categoryId },
         },
         images,
