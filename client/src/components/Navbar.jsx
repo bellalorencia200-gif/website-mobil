@@ -15,6 +15,7 @@ import LoginModal from "./LoginModal.jsx";
 import DaftarModal from "./DaftarModal.jsx";
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import logoMobilku from "../assets/logomobilkuwhite.png";
 
 function Navbar() {
   const [isLoggedIn, setLoggedIn] = useState(false);
@@ -173,7 +174,7 @@ function Navbar() {
 
     {/* Desktop: logo gambar + subtitle (tidak berubah) */}
     <img
-      src="/src/assets/logomobilkuwhite.png"
+      src={logoMobilku}
       alt="MobilKu"
       className="hidden md:block h-8 md:h-10 w-auto drop-shadow-[0_0_8px_rgba(255,255,255,0.55)] group-hover:drop-shadow-[0_0_14px_rgba(255,255,255,0.8)] transition duration-300"
     />
@@ -555,7 +556,7 @@ function Navbar() {
     <li className="relative z-10 mb-5 pb-4 border-b border-white/10">
       <div className="flex items-center gap-2 px-2 hover:bg-transparent cursor-default">
         <img
-          src="/src/assets/logomobilkuwhite.png"
+          src={logoMobilku}
           alt="MobilKu"
           className="h-8 w-auto"
         />
