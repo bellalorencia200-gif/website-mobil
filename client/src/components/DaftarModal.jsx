@@ -102,17 +102,20 @@ function DaftarModal({ setLoggedIn }) {
 
   return (
     <dialog id="my_modal_2" className="modal">
-      <div className="modal-box w-[92%] max-w-md max-h-[85vh] rounded-2xl overflow-y-auto md:w-11/12 md:max-w-lg md:max-h-[90vh] md:rounded-2xl">
-        <h3 className="font-bold text-sm text-gray-500">Daftar</h3>
-        <p className="py-2 text-sm text-gray-500">
-          Daftar sekarang dan mulai jual beli mobil bersama MobilKu
+      <div className="modal-box w-[92%] max-w-md rounded-2xl p-3 sm:p-5 border-t-4 border-b-4 border-[#8F0712] md:w-11/12 md:max-w-lg md:rounded-2xl">
+        <h3 className="font-bold text-lg sm:text-xl text-[#8F0712]">Daftar</h3>
+        <p className="text-xs sm:text-sm text-gray-500 mb-1.5">
+          Daftar dan mulai jual beli mobil bersama MobilKu
         </p>
-        <form className="flex flex-col gap-3 mt-4" onSubmit={handleDaftar}>
-          <label className="block mt-1">Nama Lengkap</label>
+        <form
+          className="flex flex-col gap-1.5 sm:gap-2"
+          onSubmit={handleDaftar}
+        >
+          <label className="block text-xs sm:text-sm">Nama Lengkap</label>
           <input
             type="text"
             placeholder="Nama Lengkap"
-            className="input input-bordered w-full"
+            className="input input-bordered input-sm sm:input-md w-full text-sm sm:text-base focus:outline-none focus:border-[#8F0712] focus:ring-1 focus:ring-[#8F0712]"
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
             onBlur={(e) => validateFullName(e.target.value)}
@@ -120,22 +123,22 @@ function DaftarModal({ setLoggedIn }) {
           {fullNameError && (
             <p className="text-red-600 text-xs">{fullNameError}</p>
           )}
-          <label className="block mt-1">Email</label>
+          <label className="block text-xs sm:text-sm">Email</label>
           <input
             type="email"
             placeholder="Email"
-            className="input input-bordered w-full"
+            className="input input-bordered input-sm sm:input-md w-full text-sm sm:text-base focus:outline-none focus:border-[#8F0712] focus:ring-1 focus:ring-[#8F0712]"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             onBlur={(e) => validateEmail(e.target.value)}
           />
           {emailError && <p className="text-red-600 text-xs">{emailError}</p>}
-          <label className="block mt-1">Username</label>
+          <label className="block text-xs sm:text-sm">Username</label>
 
           <input
             type="text"
             placeholder="Username"
-            className="input input-bordered w-full"
+            className="input input-bordered input-sm sm:input-md w-full text-sm sm:text-base focus:outline-none focus:border-[#8F0712] focus:ring-1 focus:ring-[#8F0712]"
             autoComplete="off"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
@@ -145,12 +148,12 @@ function DaftarModal({ setLoggedIn }) {
             <p className="text-red-600 text-xs">{usernameError}</p>
           )}
 
-          <label className="block mt-1">Password</label>
+          <label className="block text-xs sm:text-sm">Password</label>
           <div className="relative">
             <input
               type={showPassword ? "text" : "password"}
               placeholder="Password"
-              className="input input-bordered w-full pr-10"
+              className="input input-bordered input-sm sm:input-md w-full pr-10 text-sm sm:text-base focus:outline-none focus:border-[#8F0712] focus:ring-1 focus:ring-[#8F0712]"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               onBlur={(e) => validatePassword(e.target.value)}
@@ -167,12 +170,14 @@ function DaftarModal({ setLoggedIn }) {
             <p className="text-red-600 text-xs">{passwordError}</p>
           )}
 
-          <label className="block mt-1">Konfirmasi Password</label>
+          <label className="block text-xs sm:text-sm">
+            Konfirmasi Password
+          </label>
           <div className="relative">
             <input
               type={showConfirmPassword ? "text" : "password"}
               placeholder="Konfirmasi Password"
-              className="input input-bordered w-full pr-10"
+              className="input input-bordered input-sm sm:input-md w-full pr-10 text-sm sm:text-base focus:outline-none focus:border-[#8F0712] focus:ring-1 focus:ring-[#8F0712]"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               onBlur={(e) => validateConfirmPassword(e.target.value)}
@@ -190,7 +195,7 @@ function DaftarModal({ setLoggedIn }) {
           )}
 
           <button
-            className="btn bg-red-700 text-white hover:bg-red-800 transition"
+            className="btn border-none text-white text-sm sm:text-base bg-gradient-to-r from-[#b3141c] via-[#96131a] to-[#7a0e12] hover:brightness-110 transition mt-1"
             disabled={isLoading}
           >
             {isLoading ? (
@@ -200,7 +205,7 @@ function DaftarModal({ setLoggedIn }) {
             )}
           </button>
         </form>
-        <p className="text-center text-sm text-gray-500 mt-3">
+        <p className="text-center text-xs sm:text-sm text-gray-500 mt-1.5">
           Sudah punya akun?{" "}
           <button
             type="button"
@@ -208,14 +213,14 @@ function DaftarModal({ setLoggedIn }) {
               document.getElementById("my_modal_2").close();
               document.getElementById("my_modal_1").showModal();
             }}
-            className="text-red-700 font-semibold hover:underline"
+            className="text-[#8F0712] font-semibold hover:underline"
           >
             Silakan login di sini
           </button>
         </p>
-        <div className="modal-action">
+        <div className="modal-action mt-1.5">
           <form method="dialog">
-            <button className="btn">Tutup</button>
+            <button className="btn btn-sm">Tutup</button>
           </form>
         </div>
       </div>

@@ -33,6 +33,7 @@ const KelolaMobil = () => {
   const [bahanBakar, setBahanBakar] = useState("");
   const [kapasitasMesin, setKapasitasMesin] = useState("");
   const [warna, setWarna] = useState("");
+  const [isPromo, setIsPromo] = useState(false);
   const [cropModalOpen, setCropModalOpen] = useState(false);
   const [cropIndex, setCropIndex] = useState(null);
   const [cropImageSrc, setCropImageSrc] = useState(null);
@@ -139,6 +140,7 @@ const KelolaMobil = () => {
     formData.append("bahanBakar", bahanBakar);
     formData.append("kapasitasMesin", kapasitasMesin);
     formData.append("warna", warna);
+    formData.append("isPromo", isPromo);
 
     setIsSubmitting(true);
 
@@ -167,6 +169,7 @@ const KelolaMobil = () => {
           setBahanBakar("");
           setKapasitasMesin("");
           setWarna("");
+          setIsPromo(false);
           setImages([]);
           setEditId(null);
           setIsSubmitting(false);
@@ -201,6 +204,7 @@ const KelolaMobil = () => {
           setBahanBakar("");
           setKapasitasMesin("");
           setWarna("");
+          setIsPromo(false);
           setImages([]);
           setEditId(null);
           setIsSubmitting(false);
@@ -248,6 +252,7 @@ const KelolaMobil = () => {
     setBahanBakar(mobil.bahanBakar ?? "");
     setKapasitasMesin(mobil.kapasitasMesin ?? "");
     setWarna(mobil.warna ?? "");
+    setIsPromo(mobil.isPromo ?? false);
     setEditId(mobil.id);
     setImages([]);
     setImagesAsli([]);
@@ -291,6 +296,7 @@ const KelolaMobil = () => {
             setBahanBakar("");
             setKapasitasMesin("");
             setWarna("");
+            setIsPromo(false);
             setImages([]);
             setImagesAsli([]);
             setFotoLama([]);
@@ -482,7 +488,35 @@ const KelolaMobil = () => {
                 onChange={(e) => setStok(e.target.value)}
               />
 
-              <label className="block mt-1">Kilometer</label>
+              <div className="flex items-center justify-between mt-3 py-3 px-3.5 rounded-xl border border-gray-200 bg-gray-50">
+                <div className="pr-3">
+                  <p className="text-sm font-bold text-gray-800">
+                    Tandai sebagai Promo Eksklusif
+                  </p>
+                  <p className="text-[11px] text-gray-400 mt-0.5">
+                    Mobil ini akan muncul di tab "Promo Eksklusif" pada
+                    halaman Katalog
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setIsPromo(!isPromo)}
+                  className={`w-11 h-6 rounded-full relative flex-shrink-0 transition-colors duration-200 ${
+                    isPromo
+                      ? "bg-gradient-to-b from-[#9d151b] to-[#70090F]"
+                      : "bg-gray-300"
+                  }`}
+                  aria-pressed={isPromo}
+                >
+                  <span
+                    className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow transition-all duration-200 ${
+                      isPromo ? "right-0.5" : "left-0.5"
+                    }`}
+                  ></span>
+                </button>
+              </div>
+
+              <label className="block mt-3">Kilometer</label>
               <input
                 type="number"
                 placeholder="Kilometer (contoh: 35000)"

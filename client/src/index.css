@@ -1,41 +1,30 @@
 /* ========================================
    GOOGLE FONTS
 ======================================== */
-
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&family=Raleway:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
 
 /* ========================================
-   TAILWIND CSS
+   TAILWIND
 ======================================== */
-
 @import "tailwindcss";
 
 
 /* ========================================
    DAISY UI
 ======================================== */
-
 @plugin "daisyui" {
   themes: light --default;
 }
 
 
 /* ========================================
-   CUSTOM THEME
+   CUSTOM VARIABLES
 ======================================== */
-
-@theme {
-
-  /* FONT */
+:root {
   --font-serif: "Playfair Display", serif;
-  --font-sans: "Montserrat", sans-serif;
-  --font-explora: "Explora", cursive;
-
-  /* ANIMATION */
-  --animate-slide-left: slideLeft 25s linear infinite;
-  --animate-slide-right: slideRight 25s linear infinite;
-
+  --font-sans: "Montserrat", "Plus Jakarta Sans", sans-serif;
+  --font-raleway: "Raleway", sans-serif;
 }
 
 
@@ -43,77 +32,93 @@
    KEYFRAMES
 ======================================== */
 
-/* SLIDE LEFT */
-
-@keyframes slideLeft {
-
-  0% {
-    transform: translateX(0);
-  }
-
-  100% {
-    transform: translateX(-50%);
-  }
-
+/* TAB SLIDE */
+@keyframes slide {
+  0% { width: 0%; }
+  100% { width: 100%; }
 }
 
-
-/* SLIDE RIGHT */
-
-@keyframes slideRight {
-
+/* FADE UP */
+@keyframes fadeUp {
   0% {
-    transform: translateX(-50%);
+    opacity: 0;
+    transform: translateY(10px);
   }
-
   100% {
-    transform: translateX(0);
+    opacity: 1;
+    transform: translateY(0);
   }
-
 }
 
-
-/* SHINE EFFECT */
-
-@keyframes shine {
-
+/* SHIMMER GLOW FOR ACTIVE TAB */
+@keyframes shimmerGlow {
   0% {
-    transform: translateX(-120%) skewX(-12deg);
+    background-position: -200% 0;
   }
-
   100% {
-    transform: translateX(220%) skewX(-12deg);
+    background-position: 200% 0;
   }
-
 }
 
-
-/* BORDER GLOW */
-
-@keyframes borderGlow {
-
-  0%,
-  100% {
-
-    box-shadow:
-      0 0 0 1px rgba(217, 168, 92, 0.35),
-      0 0 10px rgba(217, 168, 92, 0.15);
-
+/* PULSE SPARKLE FOR HOT BADGE */
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
   }
-
   50% {
-
-    box-shadow:
-      0 0 0 1px rgba(217, 168, 92, 0.7),
-      0 0 18px rgba(217, 168, 92, 0.45);
-
+    opacity: 0.85;
+    transform: scale(1.05);
   }
+}
 
+
+/* MARQUEE SLIDE KIRI (Baris 1 Logo Merek) */
+@keyframes slideLeft {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* MARQUEE SLIDE KANAN (Baris 2 Logo Merek) */
+@keyframes slideRight {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* ========================================
+   ANIMATION CLASSES
+======================================== */
+
+.animate-slide {
+  animation: slide 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.animate-fadeUp {
+  animation: fadeUp 0.45s ease-out;
+}
+
+/* Glare/Shimmer Effect pada Tab Merah */
+.animate-shimmer {
+  background-size: 200% 100%;
+  animation: shimmerGlow 3.5s infinite linear;
+}
+
+/* Pulse lembut pada badge HOT */
+.animate-pulse-glow {
+  animation: pulseGlow 2s infinite ease-in-out;
 }
 
 
 /* ========================================
-   SCROLLBAR
+   UTILITIES & SCROLLBAR
 ======================================== */
 
 .scrollbar-hide::-webkit-scrollbar {
@@ -123,4 +128,170 @@
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+
+/* Container pembungkus di pojok kiri atas */
+.ribbon-wrapper {
+  position: absolute;
+  top: -6px;
+  left: -6px;
+  width: 90px;
+  height: 90px;
+  z-index: 30;
+  pointer-events: none;
+}
+
+/* Pita Melengkung Utama */
+.ribbon-promo-3d {
+  position: absolute;
+  top: 16px;
+  left: -22px;
+  width: 110px;
+  padding: 5px 0;
+  text-align: center;
+  transform: rotate(-45deg);
+
+  /* Gradasi Merah Marun Mewah */
+  background: linear-gradient(135deg, #4A0007 0%, #8F1117 50%, #5E030A 100%);
+
+  /* Teks & Font */
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+
+  /* Lis Emas di Pinggir Pita */
+  border-top: 1.5px solid #D9A85C;
+  border-bottom: 2px solid #FCEABB;
+
+  /* Bayangan Pita */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* Lipatan 3D Sisi Atas Kartu (Emas) */
+.ribbon-wrapper::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 20px;
+  border-top: 6px solid #B08236;
+  border-left: 6px solid transparent;
+}
+
+/* Lipatan 3D Sisi Kiri Kartu (Emas) */
+.ribbon-wrapper::after {
+  content: "";
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  border-left: 6px solid #B08236;
+  border-bottom: 6px solid transparent;
+}
+
+/* =========================================
+   Pita Promo Premium (Mewah) KELUAR 3D
+   ========================================= */
+
+/* Pembungkus utama di pojok kiri atas kartu */
+.ribbon-wrapper {
+  position: absolute;
+  top: -6px;
+  left: -6px;
+  width: 90px;
+  height: 90px;
+  z-index: 40;
+  pointer-events: none;
+}
+
+/* Pita Melengkung Utama */
+.ribbon-promo-outside {
+  position: absolute;
+  top: 18px;
+  left: -25px;
+  width: 120px;
+  padding: 4px 0;
+  text-align: center;
+  transform: rotate(-45deg);
+  z-index: 2;
+
+  /* Gradasi Merah Marun Mewah */
+  background: linear-gradient(135deg, #4A0007 0%, #8F1117 50%, #5E030A 100%);
+
+  /* Teks & Font */
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-family: 'Plus Jakarta Sans', 'Montserrat', sans-serif;
+
+  /* Lis Emas Atas & Bawah langsung via Border */
+  border-top: 1.5px solid #D9A85C;
+  border-bottom: 1.5px solid #D9A85C;
+
+  /* Bayangan Pita */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Lipatan 3D Sisi Atas (Efek Emas Melipat ke Belakang Kartu) */
+.ribbon-wrapper::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 23px;
+  border-top: 6px solid #B08236;
+  border-left: 6px solid transparent;
+  z-index: 1;
+}
+
+/* Lipatan 3D Sisi Kiri (Efek Emas Melipat ke Belakang Kartu) */
+.ribbon-wrapper::after {
+  content: "";
+  position: absolute;
+  bottom: 23px;
+  left: 0;
+  border-left: 6px solid #B08236;
+  border-bottom: 6px solid transparent;
+  z-index: 1;
+}
+
+@keyframes shine {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* RIPPLE EFFECT */
+.ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+
+.ripple .ripple-span {
+  position: absolute;
+  border-radius: 9999px;
+  transform: scale(0);
+  animation: ripple 600ms linear;
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
+@keyframes ripple {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
 }

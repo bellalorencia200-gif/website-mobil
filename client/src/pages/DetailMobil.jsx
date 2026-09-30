@@ -5,6 +5,7 @@ import Navbar from "../components/Navbar.jsx";
 import Footer from "../components/Footer.jsx";
 import TabsMobil from "../components/TabsMobil.jsx";
 
+
 import {
   PiCalendarBold,
   PiRoadHorizonBold,
@@ -13,6 +14,7 @@ import {
   PiEngineBold,
   PiPaletteBold,
 } from "react-icons/pi";
+import SearchBox from "../components/SearchBox.jsx";
 
 const Nomor_whatsap = "6282176957132";
 
@@ -230,15 +232,18 @@ function DetailMobil() {
               {mobil.nama}
             </h1>
             <div className="flex flex-wrap gap-2 mb-4">
-              <span className="flex items-center gap-1 bg-green-50 border border-green-100 rounded-lg px-2.5 py-1.5 text-[11px] font-bold text-green-700">
-                ✓ Dokumen Lengkap
-              </span>
-              <span className="flex items-center gap-1 bg-green-50 border border-green-100 rounded-lg px-2.5 py-1.5 text-[11px] font-bold text-green-700">
-                ✓ Siap Pakai
-              </span>
-              <span className="flex items-center gap-1 bg-green-50 border border-green-100 rounded-lg px-2.5 py-1.5 text-[11px] font-bold text-green-700">
-                ✓ Bebas Banjir
-              </span>
+
+<span className="flex items-center gap-1 bg-red-50 border border-red-100 rounded-lg px-2.5 py-1.5 text-[11px] font-bold text-red-700">
+  ✓ Dokumen Lengkap
+</span>
+<span className="flex items-center gap-1 bg-red-50 border border-red-100 rounded-lg px-2.5 py-1.5 text-[11px] font-bold text-red-700">
+  ✓ Siap Pakai
+</span>
+<span className="flex items-center gap-1 bg-red-50 border border-red-100 rounded-lg px-2.5 py-1.5 text-[11px] font-bold text-red-700">
+  ✓ Bebas Banjir
+</span>
+
+
             </div>
             <div className="bg-gradient-to-br from-red-50 to-white border border-red-100 rounded-xl px-4 py-3.5 mb-4">
               <p className="text-[11px] text-gray-400 font-bold uppercase tracking-wide mb-0.5">
@@ -351,7 +356,7 @@ function DetailMobil() {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={cekLoginSebelumAksi}
-                className="flex-1 flex flex-col items-center justify-center gap-0.5 bg-red-700 hover:bg-red-800 text-white font-bold text-sm rounded-xl py-2.5 transition"
+                className="flex-1 flex flex-col items-center justify-center gap-0.5 bg-[#8f1117] hover:bg-[#5f0a0d] text-white font-bold text-sm rounded-xl py-2.5 transition"
               >
                 <span>Beli Sekarang</span>
                 <span className="text-[10px] font-semibold opacity-80">
@@ -414,8 +419,19 @@ function DetailMobil() {
                 </Link>
               ))}
             </div>
+
+            <div className="text-center mt-6">
+              <Link
+                to="/katalog"
+                className="inline-flex items-center gap-1.5 text-red-700 text-sm font-extrabold hover:text-red-800 transition-colors duration-300"
+              >
+                Lihat Mobil Selengkapnya
+                <span className="text-base">→</span>
+              </Link>
+            </div>
           </div>
         )}
+
       </div>
       <Footer />
     </div>

@@ -57,15 +57,22 @@ function LoginModal({ setLoggedIn }) {
 
   return (
     <dialog id="my_modal_1" className="modal">
-      <div className="modal-box">
-        <h3 className="font-bold text-lg text-red-700">Login</h3>
-        <p className="py-2 text-sm text-gray-500">Masuk Ke Akun Mobilku</p>
-        <form className="flex flex-col gap-3 mt-4" onSubmit={handleLogin}>
-          <label className="block mt-1">Email atau Username</label>
+<div className="modal-box w-[92%] max-w-sm sm:max-w-md rounded-2xl p-5 sm:p-8 border-t-4 border-b-4 border-[#8F0712]">
+          <h3 className="font-bold text-lg sm:text-xl text-[#8F0712]">Login</h3>
+        <p className="py-2 text-xs sm:text-sm text-gray-500">
+          Masuk Ke Akun Mobilku
+        </p>
+        <form
+          className="flex flex-col gap-2.5 sm:gap-3 mt-3 sm:mt-4"
+          onSubmit={handleLogin}
+        >
+          <label className="block mt-1 text-sm sm:text-base">
+            Email atau Username
+          </label>
           <input
             type="text"
             placeholder="email atau username"
-            className="input input-bordered w-full"
+            className="input input-bordered w-full text-sm sm:text-base focus:outline-none focus:border-[#8F0712] focus:ring-1 focus:ring-[#8F0712]"
             value={identifier}
             onChange={(e) => setIdentifier(e.target.value)}
             onBlur={(e) => validateIdentifier(e.target.value)}
@@ -74,12 +81,12 @@ function LoginModal({ setLoggedIn }) {
             <p className="text-red-600 text-xs">{identifierError}</p>
           )}
 
-          <label className="block mt-1">Password</label>
+          <label className="block mt-1 text-sm sm:text-base">Password</label>
           <div className="relative">
             <input
               type={showPassword ? "text" : "password"}
               placeholder="password"
-              className="input input-bordered w-full pr-10"
+              className="input input-bordered w-full pr-10 text-sm sm:text-base focus:outline-none focus:border-[#8F0712] focus:ring-1 focus:ring-[#8F0712]"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               onBlur={(e) => validatePassword(e.target.value)}
@@ -97,7 +104,7 @@ function LoginModal({ setLoggedIn }) {
           )}
 
           <button
-            className="btn bg-red-700 text-white hover:bg-red-800 transition"
+            className="btn border-none text-white text-sm sm:text-base bg-gradient-to-r from-[#b3141c] via-[#96131a] to-[#7a0e12] hover:brightness-110 transition"
             disabled={isLoading}
           >
             {isLoading ? (
@@ -107,12 +114,12 @@ function LoginModal({ setLoggedIn }) {
             )}
           </button>
 
-          <p className="text-center text-sm text-gray-500 mt-2">
+          <p className="text-center text-xs sm:text-sm text-gray-500 mt-2">
             Belum punya akun?{" "}
             <button
               type="button"
               onClick={handleGoToDaftar}
-              className="text-red-700 font-semibold hover:underline cursor-pointer"
+              className="text-[#8F0712] font-semibold hover:underline cursor-pointer"
             >
               Daftar di sini
             </button>
@@ -120,7 +127,7 @@ function LoginModal({ setLoggedIn }) {
         </form>
         <div className="modal-action">
           <form method="dialog">
-            <button className="btn">Tutup</button>
+            <button className="btn btn-sm sm:btn-md">Tutup</button>
           </form>
         </div>
       </div>

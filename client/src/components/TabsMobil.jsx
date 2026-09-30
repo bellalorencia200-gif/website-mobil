@@ -39,7 +39,7 @@ function TabsMobil({ mobil }) {
           onClick={() => setActiveTab("info")}
           className={`py-4 text-sm font-bold border-b-2 whitespace-nowrap ${
             activeTab === "info"
-              ? "text-red-700 border-red-700"
+             ? "text-[#8f1117] border-[#8f1117]"
               : "text-gray-400 border-transparent"
           }`}
         >
@@ -49,7 +49,7 @@ function TabsMobil({ mobil }) {
           onClick={() => setActiveTab("spesifikasi")}
           className={`py-4 text-sm font-bold border-b-2 whitespace-nowrap ${
             activeTab === "spesifikasi"
-              ? "text-red-700 border-red-700"
+             ? "text-[#8f1117] border-[#8f1117]"
               : "text-gray-400 border-transparent"
           }`}
         >
@@ -59,7 +59,7 @@ function TabsMobil({ mobil }) {
           onClick={() => setActiveTab("deskripsi")}
           className={`py-4 text-sm font-bold border-b-2 whitespace-nowrap ${
             activeTab === "deskripsi"
-              ? "text-red-700 border-red-700"
+              ? "text-[#8f1117] border-[#8f1117]"
               : "text-gray-400 border-transparent"
           }`}
         >
@@ -103,7 +103,7 @@ function TabsMobil({ mobil }) {
                   </li>
                 ))}
               </ul>
-              <div className="bg-red-50 border border-red-100 rounded-lg px-3 py-2.5 text-[11px] text-red-800 font-semibold leading-relaxed">
+                            <div className="bg-[#8f1117]/8 border border-[#8f1117]/15 rounded-lg px-3 py-2.5 text-[11px] text-[#8f1117] font-semibold leading-relaxed">
                 ⓘ Mobil ini telah melalui inspeksi dan pengecekan kondisi oleh
                 tim kami.
               </div>

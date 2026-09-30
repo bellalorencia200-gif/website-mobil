@@ -1,10 +1,11 @@
-import TrustStats from "../components/TrustStats";
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import bgBannerMobil from "../assets/mobilgacor.jpg";
 import ShowroomMap from "../components/ShowroomMap";
 import TestimoniForm from "../components/TestimoniForm";
 import TestimoniSlider from "../components/TestimoniSlider";
+import premiumBanner from "../assets/premium-banner.jpg";
+
 import {
   FaCar,
   FaPlus,
@@ -17,7 +18,6 @@ import {
 
 import Navbar from "../components/Navbar.jsx";
 import Hero from "../components/Hero.jsx";
-import SearchBox from "../components/SearchBox.jsx";
 import FaqItem from "../components/FaqItem.jsx";
 import Footer from "../components/Footer.jsx";
 import MobilCard from "../components/MobilCard.jsx";
@@ -56,7 +56,7 @@ import hargaterbaik from "../assets/hargaterbaik.png";
 import customersenang from "../assets/customersenang.jpg";
 import bantuantimahli from "../assets/bantuantimahli.png";
 
-// --- DATA STATIS (Diletakkan di luar komponen agar tidak dire-create saat render) ---
+// --- DATA STATIS ---
 const dataFeature = [
   {
     image: kualitasterbaik,
@@ -101,11 +101,11 @@ const dataFaq = [
   },
   {
     pertanyaan: "Bagaimana saya tahu pembayaran saya aman dilakukan ke MobilKu?",
-    jawaban: "Semua transaksi resmi MobilKu hanya dilakukan melalui rekening dan metode pembayaran yang tertera resmi di website kami. Jika menemukan nomor rekening yang berbeda dari yang tertera, segera hubungi Customer Service kami di [Nomor Customer Service]. Waspadalah terhadap skema penipuan dan jangan bagikan informasi sensitif Anda kepada siapa pun.",
+    jawaban: "Semua transaksi resmi MobilKu hanya dilakukan melalui rekening dan metode pembayaran yang tertera resmi di website kami. Jika menemukan nomor rekening yang berbeda dari yang tertera, segera hubungi Customer Service kami. Waspadalah terhadap skema penipuan dan jangan bagikan informasi sensitif Anda kepada siapa pun.",
   },
   {
     pertanyaan: "Mengapa harus membeli mobil di MobilKu?",
-    jawaban: "Kami menawarkan mobil bekas pilihan yang telah melalui pemeriksaan kualitas dan kelengkapan dokumen, dengan harga transparan dan proses yang mudah, sehingga Anda bisa membeli dengan lebih tenang",
+    jawaban: "Kami menawarkan mobil bekas pilihan yang telah melalui pemeriksaan kualitas dan kelengkapan dokumen, dengan harga transparan dan proses yang mudah, sehingga Anda bisa membeli dengan lebih tenang.",
   },
 ];
 
@@ -130,27 +130,37 @@ const merekPopuler = [
   { name: "Kia", logo: kia },
   { name: "Lexus", logo: lexus },
   { name: "Wuling", logo: wuling },
-  { name: "landrover", logo: landrover },
-  { name: "audi", logo: audi },
+  { name: "Land Rover", logo: landrover },
+  { name: "Audi", logo: audi },
   { name: "Honda", logo: Honda },
-  { name: "tesla", logo: tesla },
+  { name: "Tesla", logo: tesla },
 ];
 
 const half = Math.ceil(merekPopuler.length / 2);
 const barisA = merekPopuler.slice(0, half);
 const barisB = merekPopuler.slice(half);
 
+
+
+const getBrandLogo = (namaMerek) => {
+  const normalize = (str) => (str || "").toLowerCase().replace(/[\s-]/g, "");
+  const found = merekPopuler.find(
+    (m) => normalize(m.name) === normalize(namaMerek)
+  );
+  return found ? found.logo : null;
+};
+
 function Home() {
   const [dataMobil, setDataMobil] = useState([]);
   const [dataKategori, setDataKategori] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [, setLoading] = useState(true);
 
   // Ref untuk mengontrol scroll slider
   const kategoriSliderRef = useRef(null);
-  const mobilSliderRef = useRef(null);
+  const brandRowRefs = useRef([]);
 
   const handleScroll = (ref, offset) => {
-    if (ref.current) {
+    if (ref && ref.current) {
       ref.current.scrollBy({ left: offset, behavior: "smooth" });
     }
   };
@@ -182,122 +192,43 @@ function Home() {
     return `${baseUrl}${icon.startsWith("/") ? "" : "/"}${icon}`;
   };
 
+ // Ambil maksimal 3 merek yang masih memiliki stok
+const topMerekList = (() => {
+  const kelompok = {};
+
+  dataMobil.forEach((mobil) => {
+    // Hanya masukkan mobil yang masih tersedia
+    const stok = Number(mobil.stok ?? 1);
+
+    if (stok <= 0) return;
+
+    const merek = mobil.merek?.trim() || "Lainnya";
+
+    if (!kelompok[merek]) {
+      kelompok[merek] = [];
+    }
+
+    kelompok[merek].push(mobil);
+  });
+
+  return Object.entries(kelompok)
+    // Merek dengan jumlah mobil terbanyak berada di atas
+    .sort((a, b) => b[1].length - a[1].length)
+    // Hanya tampilkan 3 merek
+    .slice(0, 3);
+})();
+
   return (
     <>
       <Navbar />
       <div className="relative">
         <Hero />
-        <div className="relative z-10 max-w-7xl mx-auto px-0 md:px-6 -mt-24 md:-mt-28 mb-10 md:mb-14">
-          <SearchBox />
-        </div>
+        <div className="relative z-10 max-w-7xl mx-auto px-3 sm:px-4 md:px-6 -mt-16 sm:-mt-20 md:-mt-28 mb-10 md:mb-14" />
       </div>
-
-      {/* Banner Marquee Merek */}
-      <section className="max-w-7xl mx-auto mt-10 md:mt-20 px-4 md:px-6">
-        <div className="relative rounded-[24px] overflow-hidden bg-gradient-to-r from-[#2B0407] via-[#4A0A0F] to-[#2B0407] shadow-[0_20px_50px_rgba(0,0,0,0.8)] border border-[#8B1A1A]/40">
-          
-
-          {/* TAMBAHKAN ELEMEN IMG UNTUK BACKGROUND GAMBAR MOBIL AVIF */}
-<img
-  src={bgBannerMobil}
-  alt="Background Mobil"
-  className="absolute inset-0 w-full h-full object-cover object-center opacity-100 mix-blend-luminosity pointer-events-none"
-/>
-
-{/* OVERLAY GRADASI BARU (Agar teks & logo tetap terlihat jelas di atas gambar) */}
-<div className="absolute inset-0 pointer-events-none bg-gradient-to-r from-[#1F0204] via-[#2B0407]/80 to-[#1F0204]/90 z-10" />
-
-          <div className="relative z-20 grid lg:grid-cols-[38%_1fr] items-center min-h-0 lg:min-h-[380px]">
-            {/* Kolom Kiri */}
-            <div className="p-5 md:p-10 flex flex-col justify-center gap-3 md:gap-4 text-[#FBF3E9]">
-              <div className="inline-flex items-center gap-2 self-start rounded-full border border-[#D9A85C]/40 bg-[#1A0305]/80 px-3.5 py-1.5 text-[11px] font-bold tracking-wider text-[#D9A85C] shadow-inner">
-                <span className="text-xs">🚗</span>
-                <span className="text-white">24 MEREK</span>
-                <span className="h-3 w-px bg-[#D9A85C]/40"></span>
-                <span>PILIHAN TERPERCAYA</span>
-              </div>
-
-              <h2 className="font-serif italic text-3xl md:text-4xl lg:text-[40px] leading-tight text-white font-normal">
-                Temukan Mobil <br />
-                Impianmu di <span className="text-[#F1E1C8] not-italic font-sans font-semibold">Sini</span>
-              </h2>
-
-              <p className="text-[#FBF3E9]/70 text-sm leading-relaxed max-w-[34ch]">
-                Dari Toyota hingga Mercedes-Benz —{" "}
-                <strong className="text-white font-semibold">ribuan unit pilihan</strong> menanti, dengan harga dan riwayat servis yang terbuka sejak awal.
-              </p>
-
-              <div className="pt-2">
-                <Link
-                  to="/katalog"
-                  className="group inline-flex items-center gap-3 bg-gradient-to-r from-[#E6C687] to-[#C9A227] text-[#1A0305] font-bold text-sm rounded-full pl-6 pr-2 py-2.5 shadow-lg hover:brightness-110 transition-all duration-300"
-                >
-                  <span>Jelajahi Semua Merek</span>
-                  <span className="w-7 h-7 rounded-full bg-[#1A0305] text-[#D9A85C] flex items-center justify-center text-xs group-hover:translate-x-1 transition-transform">
-                    →
-                  </span>
-                </Link>
-              </div>
-
-              <div className="flex items-center gap-2.5 pt-2 text-[#FBF3E9]/80 text-xs">
-                <span className="w-5 h-5 rounded-full bg-[#D9A85C]/20 border border-[#D9A85C]/50 flex items-center justify-center text-[#D9A85C] text-[10px]">
-                  🛡️
-                </span>
-                <p>
-                  <strong className="text-white">175 titik inspeksi</strong>
-                  <span className="mx-2 text-[#D9A85C]">•</span>
-                  <strong className="text-white">Garansi mesin 1 tahun</strong>
-                </p>
-              </div>
-            </div>
-
-            {/* Kolom Kanan */}
-            <div className="relative overflow-hidden py-8 flex flex-col gap-5 [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
-              {/* Baris 1 */}
-              <div className="flex gap-4 w-max animate-[slideLeft_35s_linear_infinite] hover:[animation-play-state:paused]">
-                {[...barisA, ...barisA].map((merek, idx) => (
-                  <Link
-                    key={`a-${merek.name}-${idx}`}
-                    to={`/katalog?merek=${encodeURIComponent(merek.name)}`}
-                    className="flex-none w-[128px] h-[76px] lg:w-[170px] lg:h-24 p-1.5 rounded-2xl bg-gradient-to-b from-[#6E121B] to-[#3B070B] border-2 border-[#D9A85C]/40 shadow-[0_8px_20px_rgba(0,0,0,0.4)] hover:border-[#D9A85C] hover:scale-105 transition-all duration-300 flex items-center justify-center"
-                  >
-                    <div className="w-full h-full bg-white rounded-xl flex items-center justify-center p-2 shadow-inner">
-                      <img
-                        src={merek.logo}
-                        alt={merek.name}
-                        className="max-h-full max-w-full object-contain"
-                      />
-                    </div>
-                  </Link>
-                ))}
-              </div>
-
-              {/* Baris 2 */}
-              <div className="flex gap-4 w-max animate-[slideRight_35s_linear_infinite] hover:[animation-play-state:paused]">
-                {[...barisB, ...barisB].map((merek, idx) => (
-                  <Link
-                    key={`b-${merek.name}-${idx}`}
-                    to={`/katalog?merek=${encodeURIComponent(merek.name)}`}
-                    className="flex-none w-[128px] h-[76px] lg:w-[170px] lg:h-24 p-1.5 rounded-2xl bg-gradient-to-b from-[#6E121B] to-[#3B070B] border-2 border-[#D9A85C]/40 shadow-[0_8px_20px_rgba(0,0,0,0.4)] hover:border-[#D9A85C] hover:scale-105 transition-all duration-300 flex items-center justify-center"
-                  >
-                    <div className="w-full h-full bg-white rounded-xl flex items-center justify-center p-2 shadow-inner">
-                      <img
-                        src={merek.logo}
-                        alt={merek.name}
-                        className="max-h-full max-w-full object-contain"
-                      />
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Section Kategori */}
       {dataKategori.length > 0 && (
-        <section className="max-w-7xl mx-auto mt-14 md:mt-20 px-4 md:px-6">
+        <section className="max-w-7xl mx-auto mt-20 md:mt-40 px-4 md:px-6">
           <div className="text-center mb-8 md:mb-10">
             <p className="text-[#8B1A1A] text-base md:text-lg font-semibold tracking-[0.25em] mb-3">
               — PILIH KATEGORI —
@@ -315,14 +246,16 @@ function Home() {
           <div className="relative">
             <button
               onClick={() => handleScroll(kategoriSliderRef, -280)}
-              className="absolute -left-3 md:-left-5 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white border border-amber-300 shadow-md flex items-center justify-center text-xl hover:bg-amber-50 hover:border-amber-500 transition"
+              className="absolute -left-3 sm:-left-6 md:-left-12 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white border border-amber-300 shadow-md flex items-center justify-center text-xl hover:bg-amber-50 hover:border-amber-500 transition"
+              aria-label="Previous Category"
             >
               ‹
             </button>
 
             <button
               onClick={() => handleScroll(kategoriSliderRef, 280)}
-              className="absolute -right-3 md:-right-5 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white border border-amber-300 shadow-md flex items-center justify-center text-xl hover:bg-amber-50 hover:border-amber-500 transition"
+              className="absolute -right-3 sm:-right-6 md:-right-12 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white border border-amber-300 shadow-md flex items-center justify-center text-xl hover:bg-amber-50 hover:border-amber-500 transition"
+              aria-label="Next Category"
             >
               ›
             </button>
@@ -349,7 +282,7 @@ function Home() {
       )}
 
       {/* Section Mobil Rekomendasi */}
-      <section className="max-w-7xl mx-auto mt-14 md:mt-20 px-4 md:px-6">
+      <section className="max-w-7xl mx-auto mt-6 md:mt-20 px-4 md:px-6">
         <div className="text-center mb-8 md:mb-10">
           <p className="text-[#8B1A1A] text-[15px] md:text-[16px] font-bold uppercase tracking-[0.25em] mb-3">
             — Rekomendasi Kami —
@@ -362,82 +295,259 @@ function Home() {
             <div className="w-1.5 h-1.5 rotate-45 bg-[#C9A227]"></div>
             <div className="w-12 h-[1px] bg-[#C9A227]/60"></div>
           </div>
+        </div>
+
+        <div className="space-y-6 md:space-y-8">
+          {topMerekList.map(([merek, mobilMerek], i) => (
+            <div key={merek}>
+             
+<div className="flex items-center gap-2.5 md:gap-3 mb-2.5 md:mb-4">
+             {getBrandLogo(merek) && (
+  <img
+    src={getBrandLogo(merek)}
+    alt={merek}
+    className="flex-shrink-0 w-9 h-9 md:w-11 md:h-11 object-contain"
+  />
+)}
+
+                <h3 className="font-serif text-base md:text-xl font-semibold text-gray-900 whitespace-nowrap -ml-2 md:-ml-1.5">
+                {merek}
+                </h3>
+
+                <span className="flex-1 h-px bg-gradient-to-r from-[#C9A227] to-transparent"></span>
+
+                <Link
+                  to={`/katalog?merek=${encodeURIComponent(merek)}`}
+                  className="flex-shrink-0 text-[#8f1117] text-xs md:text-sm font-bold hover:text-[#5f0a0d] transition-colors duration-300 whitespace-nowrap"
+                >
+                  Lihat Semua →
+                </Link>
+              </div>
+
+
+
+              <div className="relative">
+                <button
+                  onClick={() => handleScroll({ current: brandRowRefs.current[i] }, -200)}
+                  className="absolute -left-3 sm:-left-6 md:-left-12 top-[122px] md:top-1/2 -translate-y-1/2 z-10 flex w-7 h-7 md:w-10 md:h-10 rounded-full bg-white border border-amber-300 shadow-md items-center justify-center text-base md:text-xl hover:bg-amber-50 hover:border-amber-500 transition"
+                  aria-label="Previous Brand Item"
+                >
+                  ‹
+                </button>
+                <button
+                  onClick={() => handleScroll({ current: brandRowRefs.current[i] }, 200)}
+                  className="absolute -right-3 sm:-right-6 md:-right-12 top-[122px] md:top-1/2 -translate-y-1/2 z-10 flex w-7 h-7 md:w-10 md:h-10 rounded-full bg-white border border-amber-300 shadow-md items-center justify-center text-base md:text-xl hover:bg-amber-50 hover:border-amber-500 transition"
+                  aria-label="Next Brand Item"
+                >
+                  ›
+                </button>
+
+                <div
+                  ref={(el) => (brandRowRefs.current[i] = el)}
+                  className="grid grid-flow-col auto-cols-[calc(50%-4px)] md:auto-cols-[220px] lg:auto-cols-[calc(25%-15px)] gap-2 md:gap-5 overflow-x-auto pb-2 px-1 scrollbar-hide snap-x snap-mandatory"
+                >
+                  {mobilMerek.slice(0, 8).map((mobil, index) => (
+                    <div key={mobil.id ?? `${merek}-${index}`} className="snap-start">
+                      <MobilCard
+                        image={mobil.images?.[0]}
+                        nama={mobil.nama}
+                        tahun={mobil.tahun}
+                        harga={mobil.harga}
+                        id={mobil.id}
+                        isPromo={mobil.isPromo}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="text-center mt-8 md:mt-10">
           <Link
             to="/katalog"
             className="text-[#be123c] text-sm font-bold hover:text-[#8f1117] transition-colors duration-300"
           >
-            Lihat Semua Mobil
+            Lihat Semua Mobil →
           </Link>
-        </div>
-
-        <div className="relative">
-          <button
-            onClick={() => handleScroll(mobilSliderRef, -280)}
-            className="absolute -left-3 md:-left-5 top-[calc(50%-20px)] -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white border border-amber-300 shadow-md flex items-center justify-center text-xl hover:bg-amber-50 hover:border-amber-500 transition"
-          >
-            ‹
-          </button>
-
-          <button
-            onClick={() => handleScroll(mobilSliderRef, 280)}
-            className="absolute -right-3 md:-right-5 top-[calc(50%-20px)] -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white border border-amber-300 shadow-md flex items-center justify-center text-xl hover:bg-amber-50 hover:border-amber-500 transition"
-          >
-            ›
-          </button>
-
-          <div
-            ref={mobilSliderRef}
-            className="grid grid-flow-col auto-cols-[calc(50%-6px)] sm:auto-cols-[220px] md:auto-cols-[240px] lg:auto-cols-[calc(25%-15px)] gap-3 sm:gap-4 md:gap-5 overflow-x-auto pb-2 px-1 scrollbar-hide snap-x snap-mandatory"
-          >
-            {dataMobil.slice(0, 8).map((mobil, index) => (
-              <div key={mobil.id ?? index} className="snap-start">
-                <MobilCard
-                  image={mobil.images?.[0]}
-                  nama={mobil.nama}
-                  tahun={mobil.tahun}
-                  harga={mobil.harga}
-                  id={mobil.id}
-                />
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 
-      {/* Banner Jual Mobil */}
-      <div className="relative max-w-7xl mx-auto my-12 md:my-16 px-4 md:px-6">
-        <div className="relative overflow-hidden rounded-[24px] bg-gradient-to-br from-[#D4172F] to-[#2A0508] ring-1 ring-[#D9A85C]/25 shadow-[0_30px_70px_-30px_rgba(24,3,5,0.6)] px-6 md:px-10 py-8 md:py-10 flex flex-col md:flex-row md:justify-between md:items-center gap-6">
-          <div className="pointer-events-none absolute -top-10 -right-10 w-64 h-64 rounded-full bg-[#D9A85C]/10 blur-[80px]" />
 
-          <div className="relative flex items-center gap-4">
-            <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#D4172F] to-[#8f1117] flex items-center justify-center flex-shrink-0 shadow-[0_10px_22px_-8px_rgba(0,0,0,0.4)]">
-              <FaCar className="text-white text-3xl md:text-4xl flex-shrink-0" />
-            </div>
-            <div>
-              <h3 className="font-serif italic text-xl md:text-2xl text-[#FBF3E9] leading-snug">
-                Ingin Menjual Mobil Anda?
-              </h3>
-              <p className="text-[#FBF3E9]/70 text-sm mt-1">
-                Pasang iklan gratis dan temukan pembeli dengan cepat!
-              </p>
-            </div>
+
+
+    {/* 🔥 PREMIUM HERO MARQUEE - FINAL FIX */}
+<section className="max-w-7xl mx-auto mt-10 md:mt-20 px-0 md:px-6">
+  <div className="relative overflow-hidden rounded-none sm:rounded-[30px] shadow-[0_30px_80px_rgba(0,0,0,0.8)]">
+
+    {/* BACKGROUND */}
+    <img
+      src={premiumBanner}
+      alt="Premium Car"
+      className="absolute inset-0 w-full h-full object-cover object-right"
+    />
+
+    {/* OVERLAY - warna rata/uniform (pakai warna tengah gradasi asli), tanpa sisi gelap kiri-kanan */}
+    <div className="absolute inset-0 bg-[#7A0E12]/85 z-10" />
+
+    {/* CONTENT */}
+    <div className="relative z-20 grid lg:grid-cols-[45%_1fr] items-center min-h-[460px] min-w-0">
+
+     {/* ================= LEFT ================= */}
+<div className="p-6 md:p-12 flex flex-col gap-5 min-w-0">
+
+  <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-white/5 backdrop-blur-md border border-white/10 hover:border-[#D9A85C]/30 transition-all duration-300 w-fit">
+    <span className="text-white text-[11px] font-semibold tracking-wide">
+      24 MEREK
+    </span>
+    <span className="w-[1px] h-2.5 bg-white/20"></span>
+    <span className="text-[#D9A85C] text-[10px] font-medium tracking-wider uppercase">
+      Pilihan Terpercaya
+    </span>
+  </div>
+
+        {/* TITLE */}
+        <h2 className="font-serif text-3xl md:text-5xl lg:text-[52px] leading-tight text-white font-semibold">
+          Mobil Impian,
+          <br />
+          Kini Jadi Nyata di{" "}
+          <span className="text-[#D9A85C] italic drop-shadow-[0_4px_15px_rgba(217,168,92,0.5)]">
+            MobilKu
+          </span>
+        </h2>
+
+        {/* LINE */}
+        <div className="w-20 h-[2px] bg-gradient-to-r from-[#D9A85C] to-transparent"></div>
+
+        {/* DESC */}
+        <p className="text-[#FBF3E9]/90 text-base max-w-md leading-relaxed">
+          Ribuan mobil berkualitas dengan harga transparan & terpercaya
+        </p>
+
+        {/* BUTTON */}
+        <Link
+  to="/katalog"
+  className="mt-3 self-start group inline-flex items-center gap-2 sm:gap-2.5
+  bg-gradient-to-r from-[#F5D28A] via-[#D9A85C] to-[#B8902E]
+  text-[#1A0305] font-bold text-xs sm:text-base rounded-full pl-3.5 pr-1 py-1.5 sm:pl-5 sm:pr-1.5 sm:py-1.5
+  shadow-[0_12px_40px_rgba(217,168,92,0.5)]
+  hover:scale-105 transition-all duration-300"
+>
+          <span>Jelajahi Semua Merek</span>
+
+          <span className="w-5 h-5 sm:w-7 sm:h-7 rounded-full bg-[#1A0305] text-[#D9A85C] flex items-center justify-center text-[10px] sm:text-sm group-hover:translate-x-1 transition">
+            →
+          </span>
+        </Link>
+
+        {/* TRUST */}
+        <div className="flex items-center gap-3 text-sm text-[#FBF3E9]/80 pt-2">
+          <span className="text-[#D9A85C]">🛡️</span>
+          <span>175 titik inspeksi</span>
+          <span className="text-[#D9A85C]">•</span>
+          <span>Garansi mesin 1 tahun</span>
+        </div>
+
+        {/* 🔥 LOGO MOBILE (AUTO SLIDE) */}
+        <div className="flex flex-col gap-2.5 pt-4 lg:hidden overflow-hidden min-w-0 w-full [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]">
+          {/* Baris 1 - geser ke kiri */}
+          <div className="flex gap-2.5 w-max animate-[slideLeft_28s_linear_infinite]">
+            {[...barisA, ...barisA].map((merek, idx) => (
+              <Link
+                key={`m-a-${merek.name}-${idx}`}
+                to={`/katalog?merek=${encodeURIComponent(merek.name)}`}
+                className="flex-none w-[92px] h-[62px] rounded-xl
+                bg-white/95
+                shadow-md
+                border border-[#D9A85C]/30
+                flex items-center justify-center
+                active:scale-95 transition
+                hover:shadow-[0_0_15px_rgba(217,168,92,0.4)]"
+              >
+                <img
+                  src={merek.logo}
+                  alt={merek.name}
+                  className="max-h-7 object-contain"
+                />
+              </Link>
+            ))}
           </div>
 
-          <Link
-            to="/jual-mobil"
-            className="group relative w-full md:w-auto flex-shrink-0 flex items-center justify-center gap-3 overflow-hidden bg-white text-[#D4172F] font-bold text-sm rounded-full pl-6 pr-2.5 py-3 shadow-lg hover:-translate-y-0.5 transition-transform duration-300 whitespace-nowrap"
-          >
-            <span className="absolute top-0 left-0 w-2/5 h-full bg-gradient-to-r from-transparent via-[#f72803]/30 to-transparent skew-x-[-12deg] animate-[shine_2.8s_ease-in-out_infinite]" />
-            <span className="relative flex items-center gap-2">
-              <FaPlus className="text-xs" />
-              Jual Mobil Sekarang
-            </span>
-            <span className="relative w-6 h-6 rounded-full bg-[#2A0508] text-[#D9A85C] flex items-center justify-center group-hover:translate-x-1 transition-transform duration-300">
-              →
-            </span>
-          </Link>
+          {/* Baris 2 - geser ke kanan */}
+          <div className="flex gap-2.5 w-max animate-[slideRight_28s_linear_infinite]">
+            {[...barisB, ...barisB].map((merek, idx) => (
+              <Link
+                key={`m-b-${merek.name}-${idx}`}
+                to={`/katalog?merek=${encodeURIComponent(merek.name)}`}
+                className="flex-none w-[92px] h-[62px] rounded-xl
+                bg-white/95
+                shadow-md
+                border border-[#D9A85C]/30
+                flex items-center justify-center
+                active:scale-95 transition
+                hover:shadow-[0_0_15px_rgba(217,168,92,0.4)]"
+              >
+                <img
+                  src={merek.logo}
+                  alt={merek.name}
+                  className="max-h-7 object-contain"
+                />
+              </Link>
+            ))}
+          </div>
+        </div>
+
+      </div>
+
+      {/* ================= RIGHT (DESKTOP ONLY, AUTO SLIDE) ================= */}
+      <div className="hidden lg:flex flex-col gap-6 pr-8 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]">
+        {/* Baris 1 - geser ke kiri */}
+        <div className="flex gap-5 w-max animate-[slideLeft_35s_linear_infinite] hover:[animation-play-state:paused]">
+          {[...barisA, ...barisA].map((merek, idx) => (
+            <Link
+              key={`d-a-${merek.name}-${idx}`}
+              to={`/katalog?merek=${encodeURIComponent(merek.name)}`}
+              className="flex-none w-[180px] h-[100px] rounded-2xl
+              bg-white shadow-[0_10px_25px_rgba(0,0,0,0.4)]
+              border-2 border-[#D9A85C]/40
+              hover:border-[#D9A85C] hover:scale-105
+              transition flex items-center justify-center"
+            >
+              <img
+                src={merek.logo}
+                alt={merek.name}
+                className="max-h-12 object-contain"
+              />
+            </Link>
+          ))}
+        </div>
+
+        {/* Baris 2 - geser ke kanan */}
+        <div className="flex gap-5 w-max animate-[slideRight_35s_linear_infinite] hover:[animation-play-state:paused]">
+          {[...barisB, ...barisB].map((merek, idx) => (
+            <Link
+              key={`d-b-${merek.name}-${idx}`}
+              to={`/katalog?merek=${encodeURIComponent(merek.name)}`}
+              className="flex-none w-[180px] h-[100px] rounded-2xl
+              bg-white shadow-[0_10px_25px_rgba(0,0,0,0.4)]
+              border-2 border-[#D9A85C]/40
+              hover:border-[#D9A85C] hover:scale-105
+              transition flex items-center justify-center"
+            >
+              <img
+                src={merek.logo}
+                alt={merek.name}
+                className="max-h-12 object-contain"
+              />
+            </Link>
+          ))}
         </div>
       </div>
+
+    </div>
+  </div>
+</section>
 
       {/* Section Keunggulan */}
       <section className="max-w-7xl mx-auto mt-14 md:mt-20 px-4 md:px-6">
@@ -491,7 +601,7 @@ function Home() {
             return (
               <div key={index} className="relative">
                 <div
-                  className="relative h-48 overflow-hidden"
+                  className="relative h-60 overflow-hidden"
                   style={{ clipPath: "polygon(0 0, 100% 0, 100% 82%, 0 100%)" }}
                 >
                   <img
@@ -517,7 +627,7 @@ function Home() {
                   <p className="text-[12.5px] text-gray-400 leading-relaxed mb-4">
                     {fitur.deskripsi}
                   </p>
-                  <div className="flex justify-between items-center border-t border-gray-100 pt-3.5">
+                  <div className="flex justify-between items-center border-gray-100 pt-3.5">
                     <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#7A0E12]">
                       Lihat Semua
                     </span>
@@ -531,6 +641,57 @@ function Home() {
           })}
         </div>
       </section>
+
+      {/* Banner Jual Mobil + Testimoni */}
+      <div className="relative max-w-7xl mx-auto my-12 md:my-16 px-4 md:px-6">
+        <div className="relative overflow-hidden rounded-[24px] ring-1 ring-[#D9A85C]/25 shadow-[0_30px_70px_-30px_rgba(24,3,5,0.6)]">
+
+          {/* Zona: Jual Mobil */}
+          <div className="relative bg-gradient-to-br from-[#D4172F] to-[#2A0508] px-6 md:px-10 py-8 md:py-10 flex flex-col md:flex-row md:justify-between md:items-center gap-6">
+            <div className="pointer-events-none absolute -top-10 -right-10 w-64 h-64 rounded-full bg-[#D9A85C]/10 blur-[80px]" />
+
+            <div className="relative flex items-center gap-4">
+              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#D4172F] to-[#8f1117] flex items-center justify-center flex-shrink-0 shadow-[0_10px_22px_-8px_rgba(0,0,0,0.4)]">
+                <FaCar className="text-white text-3xl md:text-4xl flex-shrink-0" />
+              </div>
+              <div>
+                <h3 className="font-serif italic text-xl md:text-2xl text-[#FBF3E9] leading-snug">
+                  Ingin Menjual Mobil Anda?
+                </h3>
+                <p className="text-[#FBF3E9]/70 text-sm mt-1">
+                  Pasang iklan gratis dan temukan pembeli dengan cepat!
+                </p>
+              </div>
+            </div>
+
+            <Link
+              to="/jual-mobil"
+              className="group relative w-full md:w-auto flex-shrink-0 flex items-center justify-center gap-3 overflow-hidden bg-white text-[#D4172F] font-bold text-sm rounded-full pl-6 pr-2.5 py-3 shadow-lg hover:-translate-y-0.5 transition-transform duration-300 whitespace-nowrap"
+            >
+              <span className="absolute top-0 left-0 w-2/5 h-full bg-gradient-to-r from-transparent via-[#f72803]/30 to-transparent skew-x-[-12deg] animate-[shine_2.8s_ease-in-out_infinite]" />
+              <span className="relative flex items-center gap-2">
+                <FaPlus className="text-xs" />
+                Jual Mobil Sekarang
+              </span>
+              <span className="relative w-6 h-6 rounded-full bg-[#2A0508] text-[#D9A85C] flex items-center justify-center group-hover:translate-x-1 transition-transform duration-300">
+                →
+              </span>
+            </Link>
+          </div>
+
+          {/* Garis Pemisah */}
+          <div className="h-px bg-[#D9A85C]/30" />
+
+          {/* Zona: Tulis Testimoni */}
+          <div className="bg-[#FBF3E9] px-6 md:px-10 py-5 text-center">
+            <p className="text-xs text-gray-500 mb-2">
+              Sudah pernah beli di MobilKu?
+            </p>
+            <TestimoniForm compact />
+          </div>
+        </div>
+      </div>
+      <TestimoniSlider />
 
       {/* Section FAQ */}
       <section className="max-w-7xl mx-auto mt-14 md:mt-20 px-4 md:px-6">
@@ -554,10 +715,8 @@ function Home() {
           <h2 className="text-xl font-bold">FAQ lainnya</h2>
         </div>
       </section>
-      <TrustStats />
-<TestimoniSlider />
-<TestimoniForm />
-<ShowroomMap />
+
+      <ShowroomMap />
       <Footer />
     </>
   );

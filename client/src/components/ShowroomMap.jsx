@@ -30,10 +30,10 @@ const ShowroomMap = () => {
   )}`;
 
   return (
-    <section className="w-full max-w-7xl mx-auto mt-12 md:mt-20 mb-12 md:mb-20 px-4 sm:px-6 lg:px-8">
 
+    <section id="showroom" className="w-full max-w-7xl mx-auto mt-12 md:mt-20 mb-4 md:mb-10 px-0 sm:px-6 lg:px-8">
       {/* OUTER CONTAINER */}
-      <div className="relative overflow-hidden rounded-[28px] md:rounded-[36px] bg-[#3A0D11] shadow-[0_25px_80px_rgba(45,0,5,0.25)]">
+      <div className="relative overflow-hidden rounded-none sm:rounded-[28px] md:rounded-[36px] bg-[#3A0D11] shadow-[0_25px_80px_rgba(45,0,5,0.25)]">
 
         {/* TOP ACCENT */}
         <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-transparent via-[#D9A85C] to-transparent z-20" />

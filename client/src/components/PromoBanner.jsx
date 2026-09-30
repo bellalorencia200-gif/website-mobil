@@ -52,15 +52,15 @@ function PromoBanner() {
   }, []);
 
   return (
-    <div className="relative overflow-hidden bg-gradient-to-br from-white via-red-50 to-white">
-      <div className="hidden lg:block absolute top-0 right-0 bottom-0 w-[52%] bg-gradient-to-br from-red-600 to-red-800 [clip-path:polygon(28%_0,100%_0,100%_100%,0%_100%)]"></div>
+    <div className="relative overflow-hidden bg-gradient-to-br from-white via-[#8f1117]/8 to-white">
+      <div className="hidden lg:block absolute top-0 right-0 bottom-0 w-[52%] bg-gradient-to-br from-[#250104] to-[#50070d] [clip-path:polygon(28%_0,100%_0,100%_100%,0%_100%)]"></div>
 
       <div className="relative z-10 max-w-6xl mx-auto px-5 py-12 flex flex-col lg:flex-row items-center gap-10">
         <div className="flex-1 max-w-md">
           <div className="flex items-center gap-2.5 mb-6">
-            <FaCar className="w-8 h-8 text-red-700" />
+            <FaCar className="w-8 h-8 text-[#8f1117]" />
             <div>
-              <p className="text-red-700 font-extrabold text-lg leading-tight">
+             <p className="text-[#8f1117] font-extrabold text-lg leading-tight">
                 MobilKu
               </p>
               <p className="text-gray-500 text-[11px] font-semibold">
@@ -69,7 +69,7 @@ function PromoBanner() {
             </div>
           </div>
 
-          <span className="inline-flex items-center gap-1.5 bg-red-50 text-red-700 text-xs font-extrabold px-3.5 py-1.5 rounded-full mb-5">
+          <span className="inline-flex items-center gap-1.5 bg-[#8f1117]/8 text-[#8f1117] text-xs font-extrabold px-3.5 py-1.5 rounded-full mb-5">
             <FaClock className="w-3 h-3" />
             Buka MobilKu Langsung dari HP
           </span>
@@ -77,7 +77,7 @@ function PromoBanner() {
           <h1 className="text-3xl md:text-4xl font-extrabold leading-tight mb-4 text-gray-900">
             Cari Mobil Impian
             <br />
-            <span className="text-red-700">Lebih Mudah!</span>
+           <span className="text-[#8f1117]">Lebih Mudah!</span>
           </h1>
 
           <p className="text-gray-500 text-[14.5px] leading-relaxed mb-7">
@@ -89,7 +89,7 @@ function PromoBanner() {
           <div className="grid grid-cols-2 gap-x-4 gap-y-5 mb-8">
             {fiturList.map((fitur) => (
               <div key={fitur.title}>
-                <div className="w-10 h-10 rounded-xl bg-red-700 text-white flex items-center justify-center mb-2">
+                <div className="w-10 h-10 rounded-xl bg-[#8f1117] text-white flex items-center justify-center mb-2">
                   <fitur.Icon className="w-5 h-5" />
                 </div>
                 <p className="text-[13.5px] font-extrabold text-gray-900">
@@ -104,7 +104,7 @@ function PromoBanner() {
 
           <Link
             to="/katalog"
-            className="inline-block bg-red-700 hover:bg-red-800 text-white font-extrabold text-sm px-7 py-3 rounded-xl shadow-lg shadow-red-700/25 transition"
+            className="inline-block bg-[#8f1117] hover:bg-[#5f0a0d] text-white font-extrabold text-sm px-7 py-3 rounded-xl shadow-lg shadow-[#8f1117]/25 transition"
           >
             Buka Katalog Mobil
           </Link>
@@ -115,7 +115,7 @@ function PromoBanner() {
             <div className="absolute inset-0 bg-gray-900 rounded-[2.5rem] shadow-2xl"></div>
             <div className="absolute top-[6px] left-1/2 -translate-x-1/2 w-20 h-5 bg-gray-900 rounded-full z-10"></div>
             <div className="absolute inset-[6px] bg-white rounded-[2rem] overflow-hidden flex flex-col">
-              <div className="bg-red-700 text-white px-3.5 pt-6 pb-2 flex items-center justify-between">
+              <div className="bg-[#8f1117] text-white px-3.5 pt-6 pb-2 flex items-center justify-between">
                 <span className="text-xs font-extrabold">MobilKu</span>
                 <FaBars className="w-3.5 h-3.5" />
               </div>
@@ -143,7 +143,7 @@ function PromoBanner() {
                       <p className="text-[11px] font-bold text-gray-900">
                         {mobil.nama}
                       </p>
-                      <p className="text-[11.5px] font-extrabold text-red-700 mt-0.5">
+                     <p className="text-[11.5px] font-extrabold text-[#8f1117] mt-0.5">
                         Rp {Number(mobil.harga).toLocaleString("id-ID")}
                       </p>
                     </div>

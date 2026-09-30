@@ -18,7 +18,7 @@ function FeatureCard({ image, Icon, judul, deskripsi }) {
       "
     >
       {/* ================= FOTO ================= */}
-      <div className="relative h-40 md:h-44 overflow-hidden">
+      <div className="relative h-60 overflow-hidden">
         <img
           src={image}
           alt={judul}

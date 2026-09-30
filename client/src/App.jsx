@@ -7,15 +7,17 @@ import Profile from "./pages/Profil.jsx";
 import RequireAuth from "./components/RequireAuth.jsx";
 import ScrollToTop from "./components/ScrollToTop.jsx";
 import NotFound from "./pages/NotFound.jsx";
+import BottomNavUser from "./components/BottomNavUser.jsx";
 
 import Home from "./pages/Home.jsx";
 import { Routes, Route } from "react-router-dom";
 
 function App() {
-  return (
+ return (
     <>
       <ScrollToTop />
-      <Routes>
+      <div className="pb-16 md:pb-0">
+        <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/katalog" element={<Katalog />} />
         <Route path="/tentang-kami" element={<TentangKami />} />
@@ -38,7 +40,9 @@ function App() {
           }
         />
         <Route path="*" element={<NotFound />} />
-      </Routes>
+        </Routes>
+      </div>
+       <BottomNavUser />
     </>
   );
 }

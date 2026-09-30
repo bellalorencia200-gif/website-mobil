@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "../api/axiosInstance";
 
-const TestimoniForm = () => {
+const TestimoniForm = ({ compact = false }) => {
   const [modalTerbuka, setModalTerbuka] = useState(false);
   const [namaPelanggan, setNamaPelanggan] = useState("");
   const [komentar, setKomentar] = useState("");
@@ -56,7 +56,7 @@ const TestimoniForm = () => {
   return (
     <>
       {/* Tombol kecil trigger form */}
-      <div className="flex justify-center my-8">
+      <div className={compact ? "flex justify-center" : "flex justify-center my-8"}>
         <button
           onClick={() => setModalTerbuka(true)}
           className="inline-flex items-center gap-2 rounded-full border-2 border-[#D9A85C] text-[#8B1E24] font-bold text-sm px-6 py-2.5 hover:bg-[#D9A85C]/10 transition"

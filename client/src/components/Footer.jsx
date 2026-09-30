@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
+
 function Footer() {
   const [isNavigating, setIsNavigating] = useState(false);
   const navigate = useNavigate();
@@ -13,7 +14,7 @@ function Footer() {
     }, 400);
   };
   return (
-    <footer className="footer sm:footer-horizontal bg-red-900 text-white p-10">
+    <footer className="footer sm:footer-horizontal bg-gradient-to-br from-[#250104] via-[#50070d] to-[#280205] text-white p-10">
       <nav>
         <h6 className="footer-title text-red-200">Layanan</h6>
         <Link
