@@ -176,7 +176,7 @@ function Navbar() {
     <img
       src={logoMobilku}
       alt="MobilKu"
-      className="hidden md:block h-8 md:h-10 w-auto drop-shadow-[0_0_8px_rgba(255,255,255,0.55)] group-hover:drop-shadow-[0_0_14px_rgba(255,255,255,0.8)] transition duration-300"
+      className="hidden md:block h-8 md:h-8 w-auto drop-shadow-[0_0_8px_rgba(255,255,255,0.55)] group-hover:drop-shadow-[0_0_14px_rgba(255,255,255,0.8)] transition duration-300"
     />
     <span className="hidden md:block text-[9px] font-semibold tracking-[0.35em] text-white/80 pl-0.5">
       PREMIUM AUTO

@@ -474,7 +474,7 @@ function SearchBox() {
                     "
                   >
                     {/* FOTO */}
-                    <div className="relative h-36 md:h-40 overflow-hidden">
+                    <div className="relative h-36 md:h-52 overflow-hidden">
                       <img
                         src={item.image}
                         alt={item.title}
