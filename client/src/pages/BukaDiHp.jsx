@@ -248,7 +248,7 @@ function BukaDiHp() {
         <div className="absolute left-0 right-0 top-0 h-[3px] bg-gradient-to-r from-transparent via-[#8f1117]/30 to-transparent" />
 
         <div className="relative mx-auto max-w-7xl px-5 py-12 md:px-8 md:py-16 lg:px-10 lg:py-20">
-          <div className="grid items-center gap-10 lg:grid-cols-[1fr_1fr] lg:gap-8">
+          <div className="grid items-center gap-6 lg:grid-cols-[1fr_1fr] lg:gap-10">
             
             {/* ==================================================
                 SISI KIRI: SESUAI GAMBAR REFERENSI
@@ -316,7 +316,7 @@ function BukaDiHp() {
             {/* ==================================================
                 SISI KANAN: MOCKUP HP
             ================================================== */}
-            <div className="relative flex min-h-[420px] items-center justify-center lg:min-h-[520px]">
+            <div className="relative flex min-h-[340px] items-center justify-center lg:min-h-[520px]">
               {/* Red Glow Background */}
               <div className="pointer-events-none absolute left-1/2 top-1/2 h-[60%] w-[60%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#8f1117]/15 blur-3xl" />
 
@@ -355,7 +355,7 @@ function BukaDiHp() {
           {/* ==================================================
               TRUST BAR
           ================================================== */}
-          <div className="relative z-30 mt-12 overflow-hidden rounded-[24px] bg-gradient-to-r from-[#5d090d] via-[#8f1117] to-[#5d090d] shadow-[0_20px_40px_rgba(95,10,13,0.25)]">
+        <div className="relative z-30 mt-6 md:mt-12 overflow-hidden rounded-[24px] bg-gradient-to-r from-[#5d090d] via-[#8f1117] to-[#5d090d] shadow-[0_20px_40px_rgba(95,10,13,0.25)]">
             <div className="grid grid-cols-2 lg:grid-cols-4">
               {jaminan.map(({ Icon, judul, teks }, index) => (
                 <div
@@ -388,7 +388,7 @@ function BukaDiHp() {
       {/* ==================================================
           SECTION FITUR
       ================================================== */}
-      <section className="bg-white py-14 md:py-20">
+     <section className="bg-white pt-1 pb-6 md:py-20">
         <div className="mx-auto max-w-7xl px-5 md:px-10">
           <div className="text-center">
             <p className="text-[11px] font-bold tracking-[0.35em] text-[#8f1117]">
@@ -427,7 +427,7 @@ function BukaDiHp() {
     - kalau semua kosong, section ini tidak tampil
 ========================= */}
 {daftarSosmed.length > 0 && (
-<section className="relative overflow-hidden bg-[#FBF9F6] py-16 md:py-20">
+<section className="relative overflow-hidden bg-[#FBF9F6] pt-3 pb-6 md:pt-20 md:pb-12">
 
   {/* Background Glow */}
   <div className="absolute -left-40 top-0 h-[400px] w-[400px] rounded-full bg-[#8f1117]/5 blur-3xl" />
@@ -460,7 +460,9 @@ function BukaDiHp() {
 
 
     {/* CARDS */}
-    <div className="mt-12 flex flex-wrap justify-center gap-5">
+    {/* HP: kartu memanjang (ikon kiri, teks tengah, panah kanan)
+        Laptop: kartu tinggi seperti sebelumnya */}
+    <div className="mt-10 md:mt-12 flex flex-wrap justify-center gap-3 lg:gap-5">
 
       {daftarSosmed.map(({ nama, username, Icon, href, iconBg, accent }) => (
         <a
@@ -470,72 +472,77 @@ function BukaDiHp() {
           rel="noopener noreferrer"
           className="
             group relative overflow-hidden
-            w-[calc(50%-10px)] lg:w-[calc(25%-15px)]
-            rounded-[26px]
+            flex items-center gap-4
+            w-full md:w-[calc(50%-6px)] lg:w-[calc(25%-15px)]
+            lg:block
+            rounded-[22px] lg:rounded-[26px]
             border border-gray-200/60
 
             bg-gradient-to-br from-white via-[#f8f8f8] to-[#eeeeee]
 
-            p-6 text-left
+            p-4 lg:p-6 text-left
 
-            shadow-[0_15px_40px_rgba(0,0,0,0.08)]
+            shadow-[0_10px_30px_rgba(0,0,0,0.07)] lg:shadow-[0_15px_40px_rgba(0,0,0,0.08)]
             transition-all duration-500
 
-            hover:-translate-y-3
+            hover:-translate-y-1 lg:hover:-translate-y-3
             hover:shadow-[0_30px_60px_rgba(95,10,13,0.2)]
           "
         >
 
-          {/* FOLLOW LABEL */}
-          <span className="absolute right-5 top-5 text-[10px] font-semibold tracking-widest text-gray-400">
+          {/* FOLLOW LABEL (laptop saja) */}
+          <span className="absolute right-5 top-5 hidden lg:block text-[10px] font-semibold tracking-widest text-gray-400">
             FOLLOW US
           </span>
 
           {/* ICON */}
-         <div
-  className={`
-    relative z-10
-    flex h-20 w-20 items-center justify-center
-    rounded-3xl
-    text-white
-    shadow-[0_15px_30px_rgba(0,0,0,0.15)]
-    ${iconBg}
+          <div
+            className={`
+              relative z-10 shrink-0
+              flex h-14 w-14 lg:h-20 lg:w-20 items-center justify-center
+              rounded-2xl lg:rounded-3xl
+              text-white
+              shadow-[0_10px_22px_rgba(0,0,0,0.15)]
+              ${iconBg}
 
-    transition-all duration-500
-    group-hover:scale-110
-    group-hover:-rotate-3
-  `}
->
-  <Icon className="text-3xl" />
-</div>
+              transition-all duration-500
+              group-hover:scale-110
+              group-hover:-rotate-3
+            `}
+          >
+            <Icon className="text-2xl lg:text-3xl" />
+          </div>
 
-          {/* TITLE */}
-          <h3 className="mt-5 text-[18px] font-semibold text-[#5f0a0d]">
-            {nama}
-          </h3>
+          {/* TEKS */}
+          <div className="relative z-10 min-w-0 flex-1">
+            {/* TITLE */}
+            <h3 className="lg:mt-5 text-[16px] lg:text-[18px] font-semibold text-[#5f0a0d]">
+              {nama}
+            </h3>
 
-          {/* USERNAME */}
-         <p className="mt-1 text-[13px] font-medium text-black">
-            {username}
-          </p>
+            {/* USERNAME */}
+            <p className="mt-0.5 lg:mt-1 truncate text-[12.5px] lg:text-[13px] font-medium text-gray-600 lg:text-black">
+              {username}
+            </p>
 
-          {/* DESKRIPSI */}
-          <p className="mt-3 text-[13.5px] leading-relaxed text-black">
-            {nama === "Facebook" &&
-              "Dapatkan update terbaru seputar mobil, promo dan event menarik."}
-            {nama === "Instagram" &&
-              "Lihat koleksi mobil terbaru dan konten menarik dari MobilKu."}
-            {nama === "Telegram" &&
-              "Informasi cepat dan update stok langsung dari channel resmi kami."}
-            {nama === "WhatsApp" &&
-              "Chat langsung untuk tanya mobil atau booking dengan tim kami."}
-          </p>
+            {/* DESKRIPSI (laptop saja) */}
+            <p className="mt-3 hidden lg:block text-[13.5px] leading-relaxed text-black">
+              {nama === "Facebook" &&
+                "Dapatkan update terbaru seputar mobil, promo dan event menarik."}
+              {nama === "Instagram" &&
+                "Lihat koleksi mobil terbaru dan konten menarik dari MobilKu."}
+              {nama === "Telegram" &&
+                "Informasi cepat dan update stok langsung dari channel resmi kami."}
+              {nama === "WhatsApp" &&
+                "Chat langsung untuk tanya mobil atau booking dengan tim kami."}
+            </p>
+          </div>
 
           {/* BUTTON */}
-          <div className="mt-6">
+          <div className="relative z-10 shrink-0 lg:mt-6">
             <span
               className="
-                flex h-10 w-10 items-center justify-center
+                flex h-9 w-9 lg:h-10 lg:w-10 items-center justify-center
                 rounded-full
                 bg-gradient-to-br from-[#b3141c] to-[#690b0f]
                 text-white
@@ -546,12 +553,12 @@ function BukaDiHp() {
                 group-hover:translate-x-1
               "
             >
-              <FaArrowRight className="text-sm" />
+              <FaArrowRight className="text-xs lg:text-sm" />
             </span>
           </div>
-{/* WHITE LAYER (WAJIB BANGET) */}
+
           {/* ACCENT DIAGONAL */}
-         <div className="absolute bottom-0 right-0 h-32 w-32 overflow-hidden">
+          <div className="absolute bottom-0 right-0 h-full w-24 lg:h-32 lg:w-32 overflow-hidden">
             <div
               className={`
                 absolute bottom-0 right-0 h-full w-full
@@ -566,11 +573,6 @@ function BukaDiHp() {
       ))}
 
     </div>
-
-    {/* FOOTER TEXT */}
-    <p className="mt-12 text-center text-xs tracking-widest text-black">
-      TERHUBUNG BERSAMA MOBILKU
-    </p>
 
   </div>
 </section>
