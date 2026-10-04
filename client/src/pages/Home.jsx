@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom"; // ← BARU: tambah useNavigate
-import bgBannerMobil from "../assets/mobilgacor.jpg";
 import ShowroomMap from "../components/ShowroomMap";
 import TestimoniForm from "../components/TestimoniForm";
 import TestimoniSlider from "../components/TestimoniSlider";
@@ -265,12 +264,11 @@ const topMerekList = (() => {
       <Navbar />
       <div className="relative">
         <Hero />
-        <div className="relative z-10 max-w-7xl mx-auto px-3 sm:px-4 md:px-6 -mt-16 sm:-mt-20 md:-mt-28 mb-10 md:mb-14" />
       </div>
 
       {/* Section Kategori */}
       {dataKategori.length > 0 && (
-        <section className="max-w-7xl mx-auto mt-20 md:mt-40 px-4 md:px-6">
+        <section className="max-w-7xl mx-auto mt-14 md:mt-24 px-4 md:px-6">
           <div className="text-center mb-8 md:mb-10">
             <p className="text-[#8B1A1A] text-base md:text-lg font-semibold tracking-[0.25em] mb-3">
               — PILIH KATEGORI —
@@ -596,6 +594,57 @@ const topMerekList = (() => {
   </div>
 </section>
 
+  {/* Banner Jual Mobil + Testimoni */}
+      <div className="relative max-w-7xl mx-auto my-12 md:my-16 px-4 md:px-6">
+        <div className="relative overflow-hidden rounded-[24px] ring-1 ring-[#D9A85C]/25 shadow-[0_30px_70px_-30px_rgba(24,3,5,0.6)]">
+
+          {/* Zona: Jual Mobil */}
+          <div className="relative bg-gradient-to-br from-[#D4172F] to-[#2A0508] px-6 md:px-10 py-8 md:py-10 flex flex-col md:flex-row md:justify-between md:items-center gap-6">
+            <div className="pointer-events-none absolute -top-10 -right-10 w-64 h-64 rounded-full bg-[#D9A85C]/10 blur-[80px]" />
+
+            <div className="relative flex items-center gap-4">
+              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#D4172F] to-[#8f1117] flex items-center justify-center flex-shrink-0 shadow-[0_10px_22px_-8px_rgba(0,0,0,0.4)]">
+                <FaCar className="text-white text-3xl md:text-4xl flex-shrink-0" />
+              </div>
+              <div>
+                <h3 className="font-serif italic text-xl md:text-2xl text-[#FBF3E9] leading-snug">
+                  Ingin Menjual Mobil Anda?
+                </h3>
+                <p className="text-[#FBF3E9]/70 text-sm mt-1">
+                  Pasang iklan gratis dan temukan pembeli dengan cepat!
+                </p>
+              </div>
+            </div>
+
+            <Link
+              to="/jual-mobil"
+              onClick={pindahHalaman("/jual-mobil")}
+              className="group relative w-full md:w-auto flex-shrink-0 flex items-center justify-center gap-3 overflow-hidden bg-white text-[#D4172F] font-bold text-sm rounded-full pl-6 pr-2.5 py-3 shadow-lg hover:-translate-y-0.5 transition-transform duration-300 whitespace-nowrap"
+            >
+              <span className="absolute top-0 left-0 w-2/5 h-full bg-gradient-to-r from-transparent via-[#f72803]/30 to-transparent skew-x-[-12deg] animate-[shine_2.8s_ease-in-out_infinite]" />
+              <span className="relative flex items-center gap-2">
+                <FaPlus className="text-xs" />
+                Jual Mobil Sekarang
+              </span>
+              <span className="relative w-6 h-6 rounded-full bg-[#2A0508] text-[#D9A85C] flex items-center justify-center group-hover:translate-x-1 transition-transform duration-300">
+                →
+              </span>
+            </Link>
+          </div>
+
+          {/* Garis Pemisah */}
+          <div className="h-px bg-[#D9A85C]/30" />
+
+          {/* Zona: Tulis Testimoni */}
+          <div className="bg-[#FBF3E9] px-6 md:px-10 py-5 text-center">
+            <p className="text-xs text-gray-500 mb-2">
+              Sudah pernah beli di MobilKu?
+            </p>
+            <TestimoniForm compact />
+          </div>
+        </div>
+      </div>
+
       {/* Section Keunggulan */}
       <section className="max-w-7xl mx-auto mt-14 md:mt-20 px-4 md:px-6">
         <div className="text-center mb-10">
@@ -688,59 +737,7 @@ const topMerekList = (() => {
           })}
         </div>
       </section>
-
-      {/* Banner Jual Mobil + Testimoni */}
-      <div className="relative max-w-7xl mx-auto my-12 md:my-16 px-4 md:px-6">
-        <div className="relative overflow-hidden rounded-[24px] ring-1 ring-[#D9A85C]/25 shadow-[0_30px_70px_-30px_rgba(24,3,5,0.6)]">
-
-          {/* Zona: Jual Mobil */}
-          <div className="relative bg-gradient-to-br from-[#D4172F] to-[#2A0508] px-6 md:px-10 py-8 md:py-10 flex flex-col md:flex-row md:justify-between md:items-center gap-6">
-            <div className="pointer-events-none absolute -top-10 -right-10 w-64 h-64 rounded-full bg-[#D9A85C]/10 blur-[80px]" />
-
-            <div className="relative flex items-center gap-4">
-              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#D4172F] to-[#8f1117] flex items-center justify-center flex-shrink-0 shadow-[0_10px_22px_-8px_rgba(0,0,0,0.4)]">
-                <FaCar className="text-white text-3xl md:text-4xl flex-shrink-0" />
-              </div>
-              <div>
-                <h3 className="font-serif italic text-xl md:text-2xl text-[#FBF3E9] leading-snug">
-                  Ingin Menjual Mobil Anda?
-                </h3>
-                <p className="text-[#FBF3E9]/70 text-sm mt-1">
-                  Pasang iklan gratis dan temukan pembeli dengan cepat!
-                </p>
-              </div>
-            </div>
-
-            <Link
-              to="/jual-mobil"
-              onClick={pindahHalaman("/jual-mobil")}
-              className="group relative w-full md:w-auto flex-shrink-0 flex items-center justify-center gap-3 overflow-hidden bg-white text-[#D4172F] font-bold text-sm rounded-full pl-6 pr-2.5 py-3 shadow-lg hover:-translate-y-0.5 transition-transform duration-300 whitespace-nowrap"
-            >
-              <span className="absolute top-0 left-0 w-2/5 h-full bg-gradient-to-r from-transparent via-[#f72803]/30 to-transparent skew-x-[-12deg] animate-[shine_2.8s_ease-in-out_infinite]" />
-              <span className="relative flex items-center gap-2">
-                <FaPlus className="text-xs" />
-                Jual Mobil Sekarang
-              </span>
-              <span className="relative w-6 h-6 rounded-full bg-[#2A0508] text-[#D9A85C] flex items-center justify-center group-hover:translate-x-1 transition-transform duration-300">
-                →
-              </span>
-            </Link>
-          </div>
-
-          {/* Garis Pemisah */}
-          <div className="h-px bg-[#D9A85C]/30" />
-
-          {/* Zona: Tulis Testimoni */}
-          <div className="bg-[#FBF3E9] px-6 md:px-10 py-5 text-center">
-            <p className="text-xs text-gray-500 mb-2">
-              Sudah pernah beli di MobilKu?
-            </p>
-            <TestimoniForm compact />
-          </div>
-        </div>
-      </div>
       <TestimoniSlider />
-
       {/* Section FAQ */}
       <section className="max-w-7xl mx-auto mt-14 md:mt-20 px-4 md:px-6">
         <div className="text-center py-6">
