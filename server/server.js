@@ -7,6 +7,7 @@ import cors from "cors";
 import userRoutes from "./routes/userRoutes.js";
 import settingsRoutes from "./routes/settingsRoutes.js";
 import testimoniRoutes from "./routes/testimoniRoutes.js";
+import jualMobilRoutes from "./routes/jualMobilRoutes.js";
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use("/api/mobil", mobilRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/settings", settingsRoutes);
 app.use("/api/testimoni", testimoniRoutes);
+app.use("/api/jual-mobil", jualMobilRoutes);
 
 app.get("/api/test", verifyToken, (req, res) => {
   res.json({

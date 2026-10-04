@@ -1,5 +1,16 @@
 import { prisma } from "../lib/prisma.js";
 
+// Rapikan link media sosial:
+// - undefined  -> tidak diubah (tetap seperti di database)
+// - kosong ""  -> dihapus (null)
+// - tanpa http -> otomatis ditambah https://
+const rapikanLink = (link) => {
+  if (link === undefined) return undefined;
+  const teks = String(link || "").trim();
+  if (!teks) return null;
+  return /^https?:\/\//i.test(teks) ? teks : `https://${teks}`;
+};
+
 //LOGIKA AMBIL PENGATURAN LOKASI
 export const getSettings = async (req, res) => {
   try {
@@ -15,20 +26,39 @@ export const getSettings = async (req, res) => {
   }
 };
 
-//LOGIKA UPDATE PENGATURAN LOKASI
+//LOGIKA UPDATE PENGATURAN LOKASI & MEDIA SOSIAL
 export const updateSettings = async (req, res) => {
-  const { alamat, mapEmbedUrl, jamOperasional, whatsapp } = req.body;
+  const {
+    alamat,
+    mapEmbedUrl,
+    jamOperasional,
+    whatsapp,
+    facebookUrl,
+    instagramUrl,
+    telegramUrl,
+  } = req.body;
+
+  const data = {
+    alamat,
+    mapEmbedUrl,
+    jamOperasional,
+    whatsapp,
+    facebookUrl: rapikanLink(facebookUrl),
+    instagramUrl: rapikanLink(instagramUrl),
+    telegramUrl: rapikanLink(telegramUrl),
+  };
+
   try {
     const settings = await prisma.settings.upsert({
       where: { id: "main" },
-      update: { alamat, mapEmbedUrl, jamOperasional, whatsapp },
-      create: { id: "main", alamat, mapEmbedUrl, jamOperasional, whatsapp },
+      update: data,
+      create: { id: "main", ...data },
     });
     return res
       .status(200)
-      .json({ message: "pengaturan lokasi berhasil di update", settings });
+      .json({ message: "pengaturan berhasil di update", settings });
   } catch (error) {
     console.log(error.message);
-    return res.status(500).json({ message: "gagal update pengaturan lokasi" });
+    return res.status(500).json({ message: "gagal update pengaturan" });
   }
 };

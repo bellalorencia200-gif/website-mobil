@@ -53,6 +53,9 @@ model Settings {
   mapEmbedUrl    String?
   jamOperasional String?
   whatsapp       String?
+  facebookUrl    String?
+  instagramUrl   String?
+  telegramUrl    String?
   updatedAt      DateTime @updatedAt
 }
 
@@ -67,4 +70,26 @@ model Testimoni {
   aktif         Boolean  @default(false)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+}
+
+
+model PengajuanJual {
+  id              String   @id
+  nama            String
+  noWa            String
+  kota            String?
+  merek           String
+  model           String
+  tahun           Int
+  kilometer       Int      @default(0)
+  transmisi       String   @default("Manual")
+   warna           String?
+  kondisi         String?
+  deskripsi       String?
+  hargaDiinginkan Float?
+  images          String[]
+  status          String   @default("baru")
+  catatan         String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }
