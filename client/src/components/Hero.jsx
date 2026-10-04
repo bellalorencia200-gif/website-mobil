@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { FaArrowRight, FaCar } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; // ← BARU: tambah useNavigate
 import SearchBox from "../components/SearchBox.jsx";
 
 import banner4 from "../assets/banner4.png";
@@ -48,6 +48,19 @@ const slides = [
 
 const Hero = () => {
   const [slideAktif, setSlideAktif] = useState(0);
+
+  // ← BARU: loading spinner saat tombol "Lihat Koleksi" diklik
+  const [isNavigating, setIsNavigating] = useState(false);
+  const navigate = useNavigate();
+
+  const keKatalog = (e) => {
+    e.preventDefault();
+    setIsNavigating(true);
+    setTimeout(() => {
+      navigate("/katalog");
+      setIsNavigating(false);
+    }, 400);
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -150,6 +163,7 @@ const Hero = () => {
 <div className="md:hidden flex items-center gap-2.5 mb-5">
   <Link
     to="/katalog"
+    onClick={keKatalog} // ← BARU
     className={`inline-flex items-center gap-2.5 ${slide.warnaTombol || "bg-gradient-to-r from-white via-[#f8f1e7] to-[#f3e6d2] text-[#8F0712]"} rounded-full pl-2 pr-4 py-2 shadow-[0_12px_30px_-10px_rgba(0,0,0,0.6)] font-semibold text-[12.5px] backdrop-blur-sm hover:scale-105 active:scale-95 transition-all duration-300`}
   >
     <span className="w-8 h-8 rounded-full bg-black/10 flex items-center justify-center text-sm">
@@ -159,6 +173,7 @@ const Hero = () => {
   </Link>
   <Link
     to="/katalog"
+    onClick={keKatalog} // ← BARU
     aria-label="Lihat koleksi mobil"
     className={`w-9 h-9 hover:scale-105 active:scale-95 transition-all rounded-full backdrop-blur-sm flex items-center justify-center shadow-lg ${slide.warnaPanah || "bg-white/20 border border-[#D4AF37]/40 text-white"}`}
   >
@@ -169,6 +184,7 @@ const Hero = () => {
             {/* BUTTON - desktop (tampilan tidak diubah) */}
             <Link
               to="/katalog"
+              onClick={keKatalog} // ← BARU
               className="hidden md:inline-flex items-center gap-2 bg-white text-[#8F0712] rounded-full px-3 py-1.5 shadow-lg font-semibold text-xs md:text-base hover:scale-105 hover:shadow-xl transition-all"
             >
               <span className="w-8 h-8 rounded-full border-2 border-[#8F0712] flex items-center justify-center text-sm">
@@ -212,6 +228,13 @@ const Hero = () => {
 
       {/* SEARCH BOX */}
       <SearchBox />
+
+      {/* ← BARU: LOADING SPINNER SAAT KLIK "LIHAT KOLEKSI" */}
+      {isNavigating && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-[9999]">
+          <span className="loading loading-spinner loading-lg text-white"></span>
+        </div>
+      )}
     </section>
   );
 };

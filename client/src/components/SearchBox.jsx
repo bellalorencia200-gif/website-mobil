@@ -21,6 +21,9 @@ function SearchBox() {
   const [historiPencarian, sethistoriPencarian] = useState([]);
   const [pencarianFokus, setPencarianFokus] = useState(false);
 
+  // ← BARU: loading spinner saat Enter / klik cari / klik Filter
+  const [isNavigating, setIsNavigating] = useState(false);
+
   const navigate = useNavigate();
   const boxRef = useRef(null);
   const kategoriRef = useRef(null);
@@ -122,7 +125,12 @@ function SearchBox() {
     if (kata) simpanPencarian(kata);
     setPencarianFokus(false);
 
-    navigate(kata ? `/katalog?search=${encodeURIComponent(kata)}` : "/katalog");
+    // ← BARU: tampilkan loading dulu, baru pindah halaman
+    setIsNavigating(true);
+    setTimeout(() => {
+      navigate(kata ? `/katalog?search=${encodeURIComponent(kata)}` : "/katalog");
+      setIsNavigating(false);
+    }, 400);
   }
 
   function lakukanPencarian(kataKunci = KataKunci) {
@@ -131,10 +139,25 @@ function SearchBox() {
     simpanPencarian(kataKunci);
     setPencarianFokus(false);
 
-    navigate(`/katalog?search=${encodeURIComponent(kataKunci)}`);
+    // ← BARU: tampilkan loading dulu, baru pindah halaman
+    setIsNavigating(true);
+    setTimeout(() => {
+      navigate(`/katalog?search=${encodeURIComponent(kataKunci)}`);
+      setIsNavigating(false);
+    }, 400);
+  }
+
+  // ← BARU: loading saat kartu kategori (Pilihan Favorit, dll) diklik
+  function bukaKategori() {
+    setIsNavigating(true);
+    setTimeout(() => {
+      navigate("/katalog");
+      setIsNavigating(false);
+    }, 400);
   }
 
   return (
+    <>{/* ← BARU: pembungkus, supaya spinner bisa menutupi layar penuh */}
    <div
   ref={boxRef}
   className="
@@ -376,7 +399,7 @@ function SearchBox() {
             </div>
 
             <button
-              onClick={() => navigate("/katalog")}
+              onClick={bukaKategori} // ← BARU
               className="
                 flex md:hidden
                 items-center gap-1.5
@@ -456,7 +479,7 @@ function SearchBox() {
                 return (
                   <button
                     key={index}
-                    onClick={() => navigate("/katalog")}
+                    onClick={bukaKategori} // ← BARU
                     className="
                       snap-start
                       group
@@ -616,6 +639,14 @@ function SearchBox() {
         </div>
       </div>
     </div>
+
+      {/* ← BARU: LOADING SPINNER SAAT ENTER / CARI / FILTER */}
+      {isNavigating && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-[9999]">
+          <span className="loading loading-spinner loading-lg text-white"></span>
+        </div>
+      )}
+    </>
   );
 }
 

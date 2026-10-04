@@ -11,6 +11,17 @@ const TestimoniForm = ({ compact = false }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [berhasilKirim, setBerhasilKirim] = useState(false);
 
+  // ← BARU: loading spinner saat tombol "Tulis Testimoni Anda" diklik
+  const [isMembuka, setIsMembuka] = useState(false);
+
+  const bukaModal = () => {
+    setIsMembuka(true);
+    setTimeout(() => {
+      setModalTerbuka(true);
+      setIsMembuka(false);
+    }, 400);
+  };
+
   const tutupModal = () => {
     setModalTerbuka(false);
     setBerhasilKirim(false);
@@ -58,7 +69,7 @@ const TestimoniForm = ({ compact = false }) => {
       {/* Tombol kecil trigger form */}
       <div className={compact ? "flex justify-center" : "flex justify-center my-8"}>
         <button
-          onClick={() => setModalTerbuka(true)}
+          onClick={bukaModal} // ← BARU
           className="inline-flex items-center gap-2 rounded-full border-2 border-[#D9A85C] text-[#8B1E24] font-bold text-sm px-6 py-2.5 hover:bg-[#D9A85C]/10 transition"
         >
           + Tulis Testimoni Anda
@@ -231,6 +242,13 @@ const TestimoniForm = ({ compact = false }) => {
               </>
             )}
           </div>
+        </div>
+      )}
+
+      {/* ← BARU: LOADING SPINNER SAAT KLIK "TULIS TESTIMONI ANDA" */}
+      {isMembuka && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-[9999]">
+          <span className="loading loading-spinner loading-lg text-white"></span>
         </div>
       )}
     </>

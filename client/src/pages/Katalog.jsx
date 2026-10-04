@@ -145,13 +145,44 @@ const daftarMerek = [
 
 ];
 
+// ← BARU: samakan penulisan merek (abaikan huruf besar-kecil, spasi, dan tanda "-")
+// supaya "Mercedes-Benz", "Mercedes Benz", dan "mercedesbenz" dianggap sama
+const normalisasiMerek = (teks) =>
+  (teks || "").toLowerCase().replace(/[\s-]/g, "");
+
+// ← BARU (cache): pakai data simpanan yang sama dengan Beranda,
+// supaya daftar mobil langsung muncul tanpa menunggu server
+const KUNCI_CACHE_HOME = "homeDataCache";
+
+function bacaCacheMobil() {
+  try {
+    const data = JSON.parse(sessionStorage.getItem(KUNCI_CACHE_HOME) || "null");
+    if (data && Array.isArray(data.mobil) && Array.isArray(data.kategori)) {
+      return data;
+    }
+  } catch {
+    // data rusak → abaikan
+  }
+  return null;
+}
+
 function Katalog() {
-  const [dataMobil, setDataMobil] = useState([]);
-  const [dataKategoriList, setDataKategoriList] = useState([]);
+  // ← BARU (cache): isi awal dari data simpanan (kalau ada)
+  const [dataMobil, setDataMobil] = useState(() => bacaCacheMobil()?.mobil || []);
+  const [dataKategoriList, setDataKategoriList] = useState(() => bacaCacheMobil()?.kategori || []);
+  // ← BARU (loading): true selama data pertama kali belum datang (dan belum ada cache)
+  const [sedangMemuat, setSedangMemuat] = useState(() => !bacaCacheMobil());
 
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const merek = searchParams.get("merek");
+  // ← BARU: nama merek dari URL disamakan dengan nama di daftarMerek
+  // (misal "Bmw" dari beranda → "BMW"), supaya tombol merek ikut menyala
+  const merekDariUrl = searchParams.get("merek");
+  const merek = merekDariUrl
+    ? daftarMerek.find(
+        (m) => normalisasiMerek(m.nama) === normalisasiMerek(merekDariUrl)
+      )?.nama || merekDariUrl
+    : null;
   const search = searchParams.get("search");
   const kategori = searchParams.get("kategori");
   const activeTab = searchParams.get("tab");
@@ -184,13 +215,29 @@ function Katalog() {
   ];
 
   useEffect(() => {
-    axios.get("/api/mobil").then((responses) => {
-      setDataMobil(responses.data.mobil);
-    });
+    // ← BARU (cache): ambil data terbaru, lalu simpan untuk kunjungan berikutnya
+    Promise.all([axios.get("/api/mobil"), axios.get("/api/categories")])
+      .then(([resMobil, resKategori]) => {
+        const mobil = resMobil.data?.mobil || [];
+        const kategori = resKategori.data?.categories || [];
+        setDataMobil(mobil);
+        setDataKategoriList(kategori);
 
-    axios.get("/api/categories").then((responses) => {
-      setDataKategoriList(responses.data.categories);
-    });
+        try {
+          sessionStorage.setItem(
+            KUNCI_CACHE_HOME,
+            JSON.stringify({ mobil, kategori })
+          );
+        } catch {
+          // penyimpanan penuh / diblokir → abaikan
+        }
+      })
+      .catch((error) => {
+        console.error("Gagal memuat data katalog:", error);
+      })
+      .finally(() => {
+        setSedangMemuat(false);
+      });
   }, []);
 
   useEffect(() => {
@@ -260,9 +307,15 @@ function Katalog() {
   const handleTabClick = (tab) => {
     scrollYRef.current = window.scrollY;
 
-    const next = new URLSearchParams(searchParams);
-    next.set("tab", tab);
-    setSearchParams(next, { preventScrollReset: true });
+    // ← BARU: tampilkan spinner dulu, baru ganti tab
+    setIsFiltering(true);
+
+    setTimeout(() => {
+      const next = new URLSearchParams(searchParams);
+      next.set("tab", tab);
+      setSearchParams(next, { preventScrollReset: true });
+      setIsFiltering(false);
+    }, 400);
   };
 
   useLayoutEffect(() => {
@@ -272,7 +325,7 @@ function Katalog() {
   let mobilTerfilter = merek
     ? dataMobil.filter(
         (mobil) =>
-          mobil.merek?.toLowerCase() === merek.toLowerCase()
+          normalisasiMerek(mobil.merek) === normalisasiMerek(merek) // ← BARU
       )
     : dataMobil;
 
@@ -1826,7 +1879,13 @@ function Katalog() {
           overflow-visible
         "
       >
-        {mobilTerfilter.length === 0 ? (
+        {sedangMemuat ? (
+          // ← BARU (loading): tampilkan loading selama data pertama kali dimuat
+          <div className="flex flex-col items-center justify-center py-16 text-center">
+            <span className="loading loading-spinner loading-lg text-[#8f1117]"></span>
+            <p className="text-sm text-gray-500 mt-3">Memuat daftar mobil...</p>
+          </div>
+        ) : mobilTerfilter.length === 0 ? (
           <div
             className="
               flex

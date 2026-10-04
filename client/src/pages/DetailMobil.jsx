@@ -15,8 +15,8 @@ import {
   PiPaletteBold,
 } from "react-icons/pi";
 import SearchBox from "../components/SearchBox.jsx";
+import useSettings from "../hooks/useSettings.js";
 
-const Nomor_whatsap = "6282176957132";
 
 function DetailMobil() {
   const { id } = useParams();
@@ -25,6 +25,7 @@ function DetailMobil() {
   const [selectedImage, setselectedImage] = useState(0);
   const [isFavorit, setIsFavorit] = useState(false);
   const [mobilLain, setMobilLain] = useState([]);
+  const { nomorWa: Nomor_whatsap } = useSettings();
 
   useEffect(() => {
     setIsLoading(true);

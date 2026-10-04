@@ -1,10 +1,12 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import useSettings from "../hooks/useSettings.js";
 
 
 function Footer() {
   const [isNavigating, setIsNavigating] = useState(false);
   const navigate = useNavigate();
+  const { linkWa } = useSettings();
   const handleClick = (path) => (e) => {
     e.preventDefault();
     setIsNavigating(true);
@@ -33,7 +35,7 @@ function Footer() {
         </Link>
 
         <a
-          href="https://wa.me/6282176957132"
+          href={linkWa}
           target="_blank"
           rel="noopener noreferrer"
           className="link link-hover hover:text-red-200 transition"
@@ -42,7 +44,7 @@ function Footer() {
         </a>
 
         <a
-          href="https://wa.me/6282176957132"
+          href={linkWa}
           target="_blank"
           rel="noopener noreferrer"
           className="link link-hover hover:text-red-200 transition"
@@ -61,7 +63,7 @@ function Footer() {
         </Link>
 
         <a
-          href="https://wa.me/6282176957132"
+          href={linkWa}
           target="_blank"
           rel="noopener noreferrer"
           className="link link-hover hover:text-red-200 transition"
@@ -70,7 +72,7 @@ function Footer() {
         </a>
 
         <a
-          href="https://wa.me/6282176957132"
+          href={linkWa}
           target="_blank"
           rel="noopener noreferrer"
           className="link link-hover hover:text-red-200 transition"

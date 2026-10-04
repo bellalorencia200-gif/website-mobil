@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; // ← BARU: tambah useNavigate
 import bgBannerMobil from "../assets/mobilgacor.jpg";
 import ShowroomMap from "../components/ShowroomMap";
 import TestimoniForm from "../components/TestimoniForm";
@@ -150,10 +150,40 @@ const getBrandLogo = (namaMerek) => {
   return found ? found.logo : null;
 };
 
+// ← BARU (cache): simpan data beranda sementara di browser, supaya saat user
+// menekan Kembali kartu mobil langsung muncul tanpa menunggu server
+const KUNCI_CACHE_HOME = "homeDataCache";
+
+function bacaCacheHome() {
+  try {
+    const data = JSON.parse(sessionStorage.getItem(KUNCI_CACHE_HOME) || "null");
+    if (data && Array.isArray(data.mobil) && Array.isArray(data.kategori)) {
+      return data;
+    }
+  } catch {
+    // data rusak → abaikan
+  }
+  return null;
+}
+
 function Home() {
-  const [dataMobil, setDataMobil] = useState([]);
-  const [dataKategori, setDataKategori] = useState([]);
+  // ← BARU (cache): isi awal diambil dari data simpanan (kalau ada)
+  const [dataMobil, setDataMobil] = useState(() => bacaCacheHome()?.mobil || []);
+  const [dataKategori, setDataKategori] = useState(() => bacaCacheHome()?.kategori || []);
   const [, setLoading] = useState(true);
+
+  // ← BARU: loading spinner saat tombol "Jelajahi Semua Merek" & logo merek diklik
+  const [isNavigating, setIsNavigating] = useState(false);
+  const navigate = useNavigate();
+
+  const pindahHalaman = (tujuan) => (e) => {
+    e.preventDefault();
+    setIsNavigating(true);
+    setTimeout(() => {
+      navigate(tujuan);
+      setIsNavigating(false);
+    }, 400);
+  };
 
   // Ref untuk mengontrol scroll slider
   const kategoriSliderRef = useRef(null);
@@ -173,8 +203,20 @@ function Home() {
           axios.get("/api/mobil"),
           axios.get("/api/categories"),
         ]);
-        setDataMobil(resMobil.data?.mobil || []);
-        setDataKategori(resKategori.data?.categories || []);
+        const mobil = resMobil.data?.mobil || []; // ← BARU (cache)
+        const kategori = resKategori.data?.categories || []; // ← BARU (cache)
+        setDataMobil(mobil);
+        setDataKategori(kategori);
+
+        // ← BARU (cache): simpan data terbaru untuk kunjungan berikutnya
+        try {
+          sessionStorage.setItem(
+            KUNCI_CACHE_HOME,
+            JSON.stringify({ mobil, kategori })
+          );
+        } catch {
+          // penyimpanan penuh / diblokir → abaikan, halaman tetap jalan
+        }
       } catch (error) {
         console.error("Gagal memuat data halaman utama:", error);
       } finally {
@@ -428,6 +470,7 @@ const topMerekList = (() => {
         {/* BUTTON */}
         <Link
   to="/katalog"
+  onClick={pindahHalaman("/katalog")} // ← BARU
   className="mt-3 self-start group inline-flex items-center gap-2 sm:gap-2.5
   bg-gradient-to-r from-[#F5D28A] via-[#D9A85C] to-[#B8902E]
   text-[#1A0305] font-bold text-xs sm:text-base rounded-full pl-3.5 pr-1 py-1.5 sm:pl-5 sm:pr-1.5 sm:py-1.5
@@ -457,6 +500,7 @@ const topMerekList = (() => {
               <Link
                 key={`m-a-${merek.name}-${idx}`}
                 to={`/katalog?merek=${encodeURIComponent(merek.name)}`}
+                onClick={pindahHalaman(`/katalog?merek=${encodeURIComponent(merek.name)}`)} // ← BARU
                 className="flex-none w-[92px] h-[62px] rounded-xl
                 bg-white/95
                 shadow-md
@@ -480,6 +524,7 @@ const topMerekList = (() => {
               <Link
                 key={`m-b-${merek.name}-${idx}`}
                 to={`/katalog?merek=${encodeURIComponent(merek.name)}`}
+                onClick={pindahHalaman(`/katalog?merek=${encodeURIComponent(merek.name)}`)} // ← BARU
                 className="flex-none w-[92px] h-[62px] rounded-xl
                 bg-white/95
                 shadow-md
@@ -508,6 +553,7 @@ const topMerekList = (() => {
             <Link
               key={`d-a-${merek.name}-${idx}`}
               to={`/katalog?merek=${encodeURIComponent(merek.name)}`}
+              onClick={pindahHalaman(`/katalog?merek=${encodeURIComponent(merek.name)}`)} // ← BARU
               className="flex-none w-[180px] h-[100px] rounded-2xl
               bg-white shadow-[0_10px_25px_rgba(0,0,0,0.4)]
               border-2 border-[#D9A85C]/40
@@ -529,6 +575,7 @@ const topMerekList = (() => {
             <Link
               key={`d-b-${merek.name}-${idx}`}
               to={`/katalog?merek=${encodeURIComponent(merek.name)}`}
+              onClick={pindahHalaman(`/katalog?merek=${encodeURIComponent(merek.name)}`)} // ← BARU
               className="flex-none w-[180px] h-[100px] rounded-2xl
               bg-white shadow-[0_10px_25px_rgba(0,0,0,0.4)]
               border-2 border-[#D9A85C]/40
@@ -666,6 +713,7 @@ const topMerekList = (() => {
 
             <Link
               to="/jual-mobil"
+              onClick={pindahHalaman("/jual-mobil")}
               className="group relative w-full md:w-auto flex-shrink-0 flex items-center justify-center gap-3 overflow-hidden bg-white text-[#D4172F] font-bold text-sm rounded-full pl-6 pr-2.5 py-3 shadow-lg hover:-translate-y-0.5 transition-transform duration-300 whitespace-nowrap"
             >
               <span className="absolute top-0 left-0 w-2/5 h-full bg-gradient-to-r from-transparent via-[#f72803]/30 to-transparent skew-x-[-12deg] animate-[shine_2.8s_ease-in-out_infinite]" />
@@ -718,6 +766,13 @@ const topMerekList = (() => {
 
       <ShowroomMap />
       <Footer />
+
+      {/* ← BARU: LOADING SPINNER SAAT KLIK "JELAJAHI SEMUA MEREK" / LOGO MEREK */}
+      {isNavigating && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-[9999]">
+          <span className="loading loading-spinner loading-lg text-white"></span>
+        </div>
+      )}
     </>
   );
 }

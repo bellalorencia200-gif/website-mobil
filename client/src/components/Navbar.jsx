@@ -16,6 +16,7 @@ import DaftarModal from "./DaftarModal.jsx";
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import logoMobilku from "../assets/logomobilkuwhite.png";
+import useSettings from "../hooks/useSettings.js";
 
 function Navbar() {
   const [isLoggedIn, setLoggedIn] = useState(false);
@@ -27,6 +28,7 @@ function Navbar() {
   const location = useLocation();
 
   const profileMenuRef = useRef(null);
+  const { nomorTampil, linkWa } = useSettings();
 
   const createRipple = (event) => {
     const button = event.currentTarget;
@@ -119,8 +121,8 @@ function Navbar() {
           <div className="flex justify-between items-center bg-[#6e0d10] text-white text-xs md:text-sm px-4 md:px-6 py-2">
             <div className="flex items-center gap-4 w-full md:w-auto">
               <span className="hidden sm:flex items-center gap-1.5 opacity-90 hover:opacity-100 transition">
-                <FaPhoneAlt className="text-[11px]" />
-                082176957132
+                 <FaPhoneAlt className="text-[11px]" />
+                {nomorTampil}
               </span>
               <span className="flex items-center gap-1.5 ml-auto md:ml-0">
                 <Link
@@ -154,10 +156,18 @@ function Navbar() {
 
 {/* Hamburger + Logo (berdampingan di kiri) */}
 <div className="flex items-center gap-2">
-  {/* Hamburger (mobile) */}
+  {/* Hamburger (mobile): tampilkan loading sebentar, lalu buka menu samping */}
   <label
     htmlFor="my-drawer-1"
     className="md:hidden cursor-pointer z-10"
+    onClick={(e) => {
+      e.preventDefault();
+      setIsNavigating(true);
+      setTimeout(() => {
+        setIsNavigating(false);
+        document.getElementById("my-drawer-1").checked = true;
+      }, 400);
+    }}
   >
     <RxHamburgerMenu className="text-white text-2xl" />
   </label>
@@ -176,7 +186,7 @@ function Navbar() {
     <img
       src={logoMobilku}
       alt="MobilKu"
-      className="hidden md:block h-8 md:h-8 w-auto drop-shadow-[0_0_8px_rgba(255,255,255,0.55)] group-hover:drop-shadow-[0_0_14px_rgba(255,255,255,0.8)] transition duration-300"
+      className="hidden md:block h-8 md:h-10 w-auto drop-shadow-[0_0_8px_rgba(255,255,255,0.55)] group-hover:drop-shadow-[0_0_14px_rgba(255,255,255,0.8)] transition duration-300"
     />
     <span className="hidden md:block text-[9px] font-semibold tracking-[0.35em] text-white/80 pl-0.5">
       PREMIUM AUTO
@@ -392,6 +402,13 @@ function Navbar() {
           onClick={(e) => {
             createRipple(e);
             setShowProfileMenu(false);
+            // ← BARU: tampilkan spinner dulu, baru pindah halaman
+            e.preventDefault();
+            setIsNavigating(true);
+            setTimeout(() => {
+              navigate("/profile");
+              setIsNavigating(false);
+            }, 400);
           }}
           className="ripple relative overflow-hidden flex items-center gap-3.5 px-4 py-3.5 hover:bg-white/5 transition-colors border-b border-white/10"
         >
@@ -410,6 +427,13 @@ function Navbar() {
           onClick={(e) => {
             createRipple(e);
             setShowProfileMenu(false);
+            // ← BARU: tampilkan spinner dulu, baru pindah halaman
+            e.preventDefault();
+            setIsNavigating(true);
+            setTimeout(() => {
+              navigate("/profile?edit=true"); // ← DIPERBAIKI: langsung ke mode edit
+              setIsNavigating(false);
+            }, 400);
           }}
           className="ripple relative overflow-hidden flex items-center gap-3.5 px-4 py-3.5 hover:bg-white/5 transition-colors border-b border-white/10"
         >
@@ -424,7 +448,7 @@ function Navbar() {
         </Link>
 
         <a
-          href="https://wa.me/6282176957132"
+          href={linkWa}
           target="_blank"
           rel="noopener noreferrer"
           onClick={createRipple}
@@ -441,6 +465,7 @@ function Navbar() {
         </a>
 
         {/* LOGOUT */}
+        {/* ← DIPERBAIKI: dikembalikan seperti semula (keluar lalu ke Beranda) */}
         <button
           onClick={(e) => {
             createRipple(e);

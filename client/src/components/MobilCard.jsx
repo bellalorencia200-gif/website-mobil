@@ -1,5 +1,14 @@
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react"; // ← BARU (scroll): tambah useEffect
+import { createPortal } from "react-dom"; // ← BARU
+import { Link, useNavigate, useLocation, useNavigationType } from "react-router-dom"; // ← BARU (scroll): tambah useLocation, useNavigationType
 import { FaArrowRight } from "react-icons/fa";
+
+// ← BARU (scroll): kunci penyimpanan posisi scroll sebelum buka detail
+const KUNCI_SCROLL = "posisiScrollSebelumDetail";
+
+// ← BARU (scroll): penanda supaya hanya SATU kartu yang menjalankan
+// proses pengembalian posisi (kartu di halaman ada banyak)
+let sedangMengembalikan = false;
 
 function formatHarga(harga) {
   if (harga === undefined || harga === null || harga === "") return "-";
@@ -48,9 +57,137 @@ function formatHargaSingkat(harga) {
 }
 
 function MobilCard({ image, nama, tahun, harga, id, isPromo }) {
+  // ← BARU: loading spinner saat kartu / "Lihat Detail" diklik
+  const [isNavigating, setIsNavigating] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation(); // ← BARU (scroll)
+  const jenisNavigasi = useNavigationType(); // ← BARU (scroll): "POP" = tombol kembali
+
+  // ← BARU (scroll): saat user KEMBALI dari halaman detail, cari lagi kartu
+  // yang tadi diklik, lalu geser halaman sampai kartu itu ada di posisi
+  // yang sama di layar seperti sebelum diklik
+  useEffect(() => {
+    let simpanan = null;
+    try {
+      simpanan = JSON.parse(sessionStorage.getItem(KUNCI_SCROLL) || "null");
+    } catch {
+      simpanan = null;
+    }
+
+    const halamanIni = location.pathname + location.search;
+    if (!simpanan || simpanan.halaman !== halamanIni) return;
+
+    // Bukan lewat tombol kembali → posisi lama tidak dipakai
+    if (jenisNavigasi !== "POP") {
+      sessionStorage.removeItem(KUNCI_SCROLL);
+      return;
+    }
+
+    // Sudah ada kartu lain yang sedang mengembalikan posisi
+    if (sedangMengembalikan) return;
+    sedangMengembalikan = true;
+
+    const geserKe = (top) =>
+      window.scrollTo({ top, left: 0, behavior: "instant" });
+
+    // Data mobil diambil dari server dulu, jadi kartu bisa baru muncul
+    // beberapa detik kemudian. Tunggu kartunya muncul (maks 15 detik),
+    // lalu geser sampai posisinya pas. Diulang beberapa kali karena gambar
+    // dan bagian lain di atasnya juga muncul bertahap.
+    let waktu = 0; // dalam milidetik
+    let ketemuSejak = null;
+    let stabil = 0;
+    const timer = setInterval(() => {
+      waktu += 100;
+
+      const semuaKartu = document.querySelectorAll(
+        `[data-mobil-id="${simpanan.id}"]`
+      );
+      const kartu = semuaKartu[simpanan.urutan] || semuaKartu[0];
+
+      if (!kartu) {
+        // Kartu belum muncul → tunggu. Kalau terlalu lama, pakai posisi lama.
+        if (waktu >= 15000) {
+          geserKe(simpanan.y);
+          selesai();
+        }
+        return;
+      }
+
+      if (ketemuSejak === null) ketemuSejak = waktu;
+
+      const selisih = kartu.getBoundingClientRect().top - simpanan.jarakAtas;
+      if (Math.abs(selisih) > 3) {
+        geserKe(window.scrollY + selisih);
+        stabil = 0;
+      } else {
+        stabil++;
+      }
+
+      // Selesai kalau posisi sudah pas selama ±1 detik,
+      // atau sudah 5 detik sejak kartu muncul
+      if (stabil >= 10 || waktu - ketemuSejak >= 5000) selesai();
+    }, 100);
+
+    // Hentikan pengecekan (dipanggil juga saat komponen dilepas)
+    function berhenti() {
+      clearInterval(timer);
+      window.removeEventListener("touchstart", selesai);
+      window.removeEventListener("wheel", selesai);
+      sedangMengembalikan = false;
+    }
+
+    // Benar-benar selesai → hapus posisi yang disimpan.
+    // (Posisi TIDAK dihapus di awal, karena saat mode pengembangan React
+    // menjalankan kode ini dua kali — itu penyebab posisi tadi hilang.)
+    function selesai() {
+      berhenti();
+      sessionStorage.removeItem(KUNCI_SCROLL);
+    }
+
+    // Kalau user sudah menggeser layar sendiri, jangan dipaksa lagi
+    window.addEventListener("touchstart", selesai, { passive: true });
+    window.addEventListener("wheel", selesai, { passive: true });
+
+    return berhenti;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const keDetail = (e) => {
+    // Ctrl/Cmd + klik (buka tab baru) tetap berjalan normal
+    if (e.ctrlKey || e.metaKey || e.shiftKey || e.button !== 0) return;
+
+    e.preventDefault();
+
+    // ← BARU (scroll): simpan kartu mana yang diklik & posisinya di layar
+    const kartu = e.currentTarget;
+    const semuaKartu = Array.from(
+      document.querySelectorAll(`[data-mobil-id="${id}"]`)
+    );
+    sessionStorage.setItem(
+      KUNCI_SCROLL,
+      JSON.stringify({
+        halaman: location.pathname + location.search,
+        y: window.scrollY,
+        id: String(id),
+        urutan: Math.max(0, semuaKartu.indexOf(kartu)),
+        jarakAtas: kartu.getBoundingClientRect().top,
+      })
+    );
+
+    setIsNavigating(true);
+    setTimeout(() => {
+      navigate(`/mobil/${id}`);
+      setIsNavigating(false);
+    }, 400);
+  };
+
   return (
+    <>{/* ← BARU: pembungkus */}
     <Link
       to={`/mobil/${id}`}
+      onClick={keDetail} // ← BARU
+      data-mobil-id={id} // ← BARU (scroll): penanda kartu
       className="
         group relative flex flex-col
         bg-white
@@ -302,6 +439,16 @@ function MobilCard({ image, nama, tahun, harga, id, isPromo }) {
         </div>
       </div>
     </Link>
+
+      {/* ← BARU: LOADING SPINNER (ditaruh langsung di body supaya menutupi layar penuh) */}
+      {isNavigating &&
+        createPortal(
+          <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-[9999]">
+            <span className="loading loading-spinner loading-lg text-white"></span>
+          </div>,
+          document.body
+        )}
+    </>
   );
 }
 

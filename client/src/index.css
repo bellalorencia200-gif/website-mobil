@@ -295,3 +295,7 @@
     opacity: 0;
   }
 }
+
+.clip-path-diagonal {
+  clip-path: polygon(100% 0, 0% 100%, 100% 100%);
+}

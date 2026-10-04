@@ -1,4 +1,6 @@
-import { Link, useLocation } from "react-router-dom";
+import { useState } from "react"; // ← BARU
+import { Link, useLocation, useNavigate } from "react-router-dom"; 
+import useSettings from "../hooks/useSettings.js";
 import {
   FaHome,
   FaCar,
@@ -13,7 +15,25 @@ function BottomNavUser() {
   const isKatalog =
   path.startsWith("/katalog") || path.startsWith("/mobil");
 
+  // ← BARU: loading spinner saat menu Home / Katalog diklik
+  const [isNavigating, setIsNavigating] = useState(false);
+  const navigate = useNavigate();
+  const { linkWa } = useSettings();
+
+  const pindahHalaman = (tujuan) => (e) => {
+    // Sudah berada di halaman yang sama → biarkan seperti biasa (tanpa spinner)
+    if (location.pathname + location.search === tujuan) return;
+
+    e.preventDefault();
+    setIsNavigating(true);
+    setTimeout(() => {
+      navigate(tujuan);
+      setIsNavigating(false);
+    }, 400);
+  };
+
   return (
+    <>{/* ← BARU: pembungkus, supaya spinner bisa menutupi layar penuh */}
     <div className="md:hidden fixed bottom-0 left-0 right-0 z-50">
       <div
         className="
@@ -33,6 +53,7 @@ function BottomNavUser() {
         {/* ================= HOME ================= */}
         <Link
           to="/"
+          onClick={pindahHalaman("/")} // ← BARU
           className="h-full flex items-center justify-center"
         >
           <div
@@ -112,6 +133,7 @@ function BottomNavUser() {
         {/* ================= KATALOG ================= */}
         <Link
           to="/katalog"
+          onClick={pindahHalaman("/katalog")} // ← BARU
           className="h-full flex items-center justify-center"
         >
           <div
@@ -191,7 +213,7 @@ function BottomNavUser() {
 
         {/* ================= CHATS ================= */}
         
-         <a href="https://wa.me/6282176957132"
+         <a href={linkWa}
           target="_blank"
           rel="noopener noreferrer"
           className="h-full flex items-center justify-center"
@@ -219,6 +241,14 @@ function BottomNavUser() {
         </a>
       </div>
     </div>
+
+      {/* ← BARU: LOADING SPINNER SAAT KLIK MENU HOME / KATALOG */}
+      {isNavigating && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-[9999]">
+          <span className="loading loading-spinner loading-lg text-white"></span>
+        </div>
+      )}
+    </>
   );
 }
 

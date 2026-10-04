@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+import { useState } from "react"; // ← BARU
+import { Link, useNavigate } from "react-router-dom"; // ← BARU: tambah useNavigate
 import Navbar from "../components/Navbar.jsx";
 import Footer from "../components/Footer.jsx";
 import showroomtoyota from "../assets/showroomtoyota.png";
@@ -22,6 +23,19 @@ import {
 } from "react-icons/fa";
 
 const TentangKami = () => {
+  // ← BARU: loading spinner saat tombol "Cari Mobil" / "Jual Mobil" diklik
+  const [isNavigating, setIsNavigating] = useState(false);
+  const navigate = useNavigate();
+
+  const pindahHalaman = (tujuan) => (e) => {
+    e.preventDefault();
+    setIsNavigating(true);
+    setTimeout(() => {
+      navigate(tujuan);
+      setIsNavigating(false);
+    }, 400);
+  };
+
   // ================= DATA MISI =================
   const dataMisi = [
     "Menyediakan pilihan mobil bekas berkualitas dari berbagai merek, tipe, dan harga.",
@@ -265,6 +279,7 @@ const TentangKami = () => {
             >
               <Link
                 to="/katalog"
+                onClick={pindahHalaman("/katalog")} // ← BARU
                 className="
                   inline-flex
                   items-center
@@ -292,6 +307,7 @@ const TentangKami = () => {
 
               <Link
                 to="/jual-mobil"
+                onClick={pindahHalaman("/jual-mobil")} // ← BARU
                 className="
                   inline-flex
                   items-center
@@ -356,7 +372,7 @@ const TentangKami = () => {
       </section>
 
    {/* ================= VISI MISI ================= */}
-<section className="bg-[#FBF9F6] px-5 pt-14 pb-20 md:pt-12">
+<section className="bg-[#FBF9F6] px-5 pt-8 pb-4 md:pb-20 md:pt-12">
   <div className="max-w-7xl mx-auto">
 
     {/* ================= JUDUL SECTION ================= */}
@@ -472,7 +488,7 @@ const TentangKami = () => {
     </div>
 
     {/* ================= MISI ================= */}
-    <div className="grid md:grid-cols-2 gap-12 mt-20">
+    <div className="grid md:grid-cols-2 gap-8 md:gap-12 mt-12 md:mt-20">
 
       {/* LEFT - desain tulisan baru (isi tetap sama) */}
       <div>
@@ -564,7 +580,7 @@ const TentangKami = () => {
         </ol>
 
         {/* PENUTUP */}
-        <div className="mt-8 border-t border-[#D9A85C]/25 pt-5">
+        <div className="mt-5 md:mt-8 border-t border-[#D9A85C]/25 pt-4 md:pt-5">
           <p className="text-[10px] md:text-[10.5px] font-semibold tracking-[0.22em] text-[#b8893f]">
             MOBILKU • SOLUSI MOBIL BEKAS TERBAIK UNTUK ANDA
           </p>
@@ -645,7 +661,7 @@ const TentangKami = () => {
     {/* =====================================================
     KEUNGGULAN (VERSI PREMIUM FIX)
 ===================================================== */}
-<section className="relative overflow-hidden bg-[#FBF9F6] px-5 pt-24 pb-10 md:pb-12">
+<section className="relative overflow-hidden bg-[#FBF9F6] px-5 pt-5 md:pt-24 pb-10 md:pb-12">
 
   {/* BACKGROUND CURVE */}
   <div className="absolute inset-0 pointer-events-none">
@@ -911,6 +927,13 @@ const TentangKami = () => {
       </section>
 
       <Footer />
+
+      {/* ← BARU: LOADING SPINNER SAAT KLIK "CARI MOBIL" / "JUAL MOBIL" */}
+      {isNavigating && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-[9999]">
+          <span className="loading loading-spinner loading-lg text-white"></span>
+        </div>
+      )}
     </>
   );
 };

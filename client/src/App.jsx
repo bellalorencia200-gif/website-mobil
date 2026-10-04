@@ -8,6 +8,7 @@ import RequireAuth from "./components/RequireAuth.jsx";
 import ScrollToTop from "./components/ScrollToTop.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import BottomNavUser from "./components/BottomNavUser.jsx";
+import WhatsAppMelayang from "./components/WhatsAppMelayang.jsx";
 
 import Home from "./pages/Home.jsx";
 import { Routes, Route } from "react-router-dom";
@@ -43,6 +44,7 @@ function App() {
         </Routes>
       </div>
        <BottomNavUser />
+       <WhatsAppMelayang />
     </>
   );
 }
