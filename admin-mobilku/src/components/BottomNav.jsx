@@ -1,7 +1,23 @@
-import { NavLink, useLocation } from "react-router-dom";
+import { useState } from "react";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 
 const BottomNav = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+
+  // Loading spinner saat pindah menu
+  const [isNavigating, setIsNavigating] = useState(false);
+
+  const handleMenuClick = (path) => (e) => {
+    // klik menu yang sedang aktif: tidak perlu loading
+    if (location.pathname === path) return;
+    e.preventDefault();
+    setIsNavigating(true);
+    setTimeout(() => {
+      navigate(path);
+      setIsNavigating(false);
+    }, 400);
+  };
 
   const petaTombolTambah = {
     "/admin/mobil": "btn-tambah-mobil",
@@ -19,12 +35,18 @@ const BottomNav = () => {
 
   const kelasMenu = ({ isActive }) =>
     `flex-1 flex flex-col items-center gap-0.5 py-1 ${
-      isActive ? "text-red-700" : "text-gray-400"
+      isActive ? "text-[#8f1117]" : "text-gray-400"
     }`;
 
   return (
-    <div className="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-white border-t border-gray-200 flex items-center px-1 pt-1.5 pb-[calc(env(safe-area-inset-bottom,0px)+6px)]">
-      <NavLink to="/admin" end className={kelasMenu}>
+    <>
+    {isNavigating && (
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-[2px]">
+        <span className="loading loading-spinner loading-lg text-white"></span>
+      </div>
+    )}
+    <div className="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-white border-t border-[#D9A85C]/30 flex items-center px-1 pt-1.5 pb-[calc(env(safe-area-inset-bottom,0px)+6px)]">
+      <NavLink to="/admin" end onClick={handleMenuClick("/admin")} className={kelasMenu}>
         <svg
           width="21"
           height="21"
@@ -43,7 +65,7 @@ const BottomNav = () => {
         <span className="text-[10px] font-bold">Dashboard</span>
       </NavLink>
 
-      <NavLink to="/admin/mobil" className={kelasMenu}>
+      <NavLink to="/admin/mobil" onClick={handleMenuClick("/admin/mobil")} className={kelasMenu}>
         <svg
           width="21"
           height="21"
@@ -65,7 +87,9 @@ const BottomNav = () => {
           disabled={!idTombolTambah}
           aria-label="Tambah"
           className={`w-11 h-11 rounded-full flex items-center justify-center -mt-5 border-4 border-white shadow-lg ${
-            idTombolTambah ? "bg-red-700" : "bg-gray-300"
+            idTombolTambah
+              ? "bg-gradient-to-br from-[#a5161d] to-[#5f0a0d] ring-1 ring-[#D9A85C]/50"
+              : "bg-gray-300"
           }`}
         >
           <svg
@@ -83,7 +107,7 @@ const BottomNav = () => {
         </button>
       </div>
 
-      <NavLink to="/admin/kategori" className={kelasMenu}>
+      <NavLink to="/admin/kategori" onClick={handleMenuClick("/admin/kategori")} className={kelasMenu}>
         <svg
           width="21"
           height="21"
@@ -100,7 +124,7 @@ const BottomNav = () => {
         <span className="text-[10px] font-bold">Kategori</span>
       </NavLink>
 
-      <NavLink to="/admin/user" className={kelasMenu}>
+      <NavLink to="/admin/user" onClick={handleMenuClick("/admin/user")} className={kelasMenu}>
         <svg
           width="21"
           height="21"
@@ -117,6 +141,7 @@ const BottomNav = () => {
         <span className="text-[10px] font-bold">User</span>
       </NavLink>
     </div>
+    </>
   );
 };
 

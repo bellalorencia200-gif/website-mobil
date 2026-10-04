@@ -9,6 +9,7 @@ import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import RedirectIfLoggedIn from "./components/RedirectIfLoggedIn.jsx";
 import KelolaLokasi from "./pages/KelolaLokasi.jsx";
 import KelolaTestimoni from "./pages/KelolaTestimoni.jsx";
+import KelolaPengajuan from "./pages/KelolaPengajuan.jsx";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
         <Route path="user" element={<KelolaUser />} />
         <Route path="lokasi" element={<KelolaLokasi />} />
         <Route path="testimoni" element={<KelolaTestimoni />} />
+        <Route path="pengajuan" element={<KelolaPengajuan />} />
       </Route>
     </Routes>
   );
