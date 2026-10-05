@@ -1,6 +1,6 @@
 import { prisma } from "../lib/prisma.js";
 
-// Rapikan link media sosial:
+// Rapikan link media sosial & aplikasi:
 // - undefined  -> tidak diubah (tetap seperti di database)
 // - kosong ""  -> dihapus (null)
 // - tanpa http -> otomatis ditambah https://
@@ -26,7 +26,7 @@ export const getSettings = async (req, res) => {
   }
 };
 
-//LOGIKA UPDATE PENGATURAN LOKASI & MEDIA SOSIAL
+//LOGIKA UPDATE PENGATURAN LOKASI, MEDIA SOSIAL & LINK APLIKASI
 export const updateSettings = async (req, res) => {
   const {
     alamat,
@@ -36,6 +36,8 @@ export const updateSettings = async (req, res) => {
     facebookUrl,
     instagramUrl,
     telegramUrl,
+    playStoreUrl,
+    appStoreUrl,
   } = req.body;
 
   const data = {
@@ -46,6 +48,8 @@ export const updateSettings = async (req, res) => {
     facebookUrl: rapikanLink(facebookUrl),
     instagramUrl: rapikanLink(instagramUrl),
     telegramUrl: rapikanLink(telegramUrl),
+    playStoreUrl: rapikanLink(playStoreUrl),
+    appStoreUrl: rapikanLink(appStoreUrl),
   };
 
   try {
