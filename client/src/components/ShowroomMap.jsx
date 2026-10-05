@@ -534,12 +534,14 @@ const ShowroomMap = () => {
           <iframe
             src={mapEmbedUrl}
             title="Lokasi Showroom MobilKu"
-            className="block w-full border-0"
-            style={{
-              // OpenStreetMap: peta dibuat 28px lebih tinggi dari kotaknya,
-              // jadi baris tulisan di paling bawah tersembunyi
-              height: isOsm ? "calc(100% + 28px)" : "100%",
-            }}
+            // OpenStreetMap: peta dibuat lebih tinggi dari kotaknya supaya
+            // baris tulisan di paling bawah tersembunyi.
+            // HP: tulisan jadi 2 baris → potong 48px. Desktop: 1 baris → 28px.
+            className={`block w-full border-0 ${
+              isOsm
+                ? "h-[calc(100%+48px)] sm:h-[calc(100%+28px)]"
+                : "h-full"
+            }`}
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
           />
