@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom"; // ← DIUBAH: tambah useNavigate
 import axios from "../api/axiosInstance";
 import Navbar from "../components/Navbar.jsx";
 import Footer from "../components/Footer.jsx";
@@ -17,12 +17,24 @@ import {
 
 const Profil = () => {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate(); // ← BARU
 
-  const [fullName, setFullName] = useState("");
-  const [noHp, setNoHp] = useState("");
-  const [username, setuserName] = useState("");
-  const [email, setEmail] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
+  // ← BARU: data akun yang tersimpan saat login, supaya halaman bisa
+  // langsung tampil tanpa menunggu server (server Render gratis bisa "tidur")
+  const userTersimpan = (() => {
+    try {
+      return JSON.parse(localStorage.getItem("user")) || null;
+    } catch {
+      return null;
+    }
+  })();
+
+  const [fullName, setFullName] = useState(userTersimpan?.fullName || "");
+  const [noHp, setNoHp] = useState(userTersimpan?.noHp || "");
+  const [username, setuserName] = useState(userTersimpan?.username || "");
+  const [email, setEmail] = useState(userTersimpan?.email || "");
+  // ← DIUBAH: spinner hanya muncul kalau belum ada data tersimpan sama sekali
+  const [isLoading, setIsLoading] = useState(!userTersimpan);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -39,6 +51,7 @@ const Profil = () => {
 
   const token = localStorage.getItem("token");
 
+  // ← DIUBAH: data dari server diperbarui di belakang layar + ada penanganan error
   useEffect(() => {
     axios
       .get("/api/auth/profile", {
@@ -50,7 +63,20 @@ const Profil = () => {
         setNoHp(user.noHp || "");
         setuserName(user.username);
         setEmail(user.email);
-        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        // Token tidak berlaku / sesi habis → keluar dan kembali ke Beranda
+        const status = error.response?.status;
+        if (status === 401 || status === 403) {
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+          alert("Sesi login sudah berakhir, silakan login kembali.");
+          navigate("/");
+        }
+      })
+      .finally(() => {
+        setIsLoading(false); // spinner tidak akan berputar selamanya
       });
   }, []);
 
@@ -128,11 +154,15 @@ const Profil = () => {
       : words[0].slice(0, 2).toUpperCase();
   };
 
+  // ← DIUBAH: Navbar tetap tampil saat loading (layar tidak kosong)
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-96">
-        <span className="loading loading-spinner text-[#8f1117]"></span>
-      </div>
+      <>
+        <Navbar />
+        <div className="flex justify-center items-center h-96">
+          <span className="loading loading-spinner text-[#8f1117]"></span>
+        </div>
+      </>
     );
   }
 
