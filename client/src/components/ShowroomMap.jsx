@@ -20,6 +20,8 @@ const ShowroomMap = () => {
   const jamOperasional = settings?.jamOperasional;
   const whatsapp = settings?.whatsapp;
   const mapEmbedUrl = settings?.mapEmbedUrl;
+  const isOsm = String(mapEmbedUrl || "").includes("openstreetmap.org");
+  
 
   const whatsappUrl = whatsapp
     ? `https://wa.me/${whatsapp.replace(/[^0-9]/g, "")}`
@@ -512,20 +514,32 @@ const ShowroomMap = () => {
 
     </div>
 
-    {/* SMALL GOLD ACCENT */}
+   
+{/* SMALL GOLD ACCENT */}
     <div className="mt-4 h-[2px] w-10 rounded-full bg-[#D9A85C]" />
 
     {/* MAP FRAME */}
     <div className="relative mt-4 overflow-hidden rounded-[18px] border border-[#D9A85C]/70 bg-[#210407] p-1.5 shadow-[0_15px_40px_rgba(0,0,0,0.3)]">
 
-      <div className="relative overflow-hidden rounded-[13px]">
+      <div
+        className={`relative overflow-hidden rounded-[13px] ${
+
+
+          mapEmbedUrl ? "h-[290px] sm:h-[330px] lg:h-[355px]" : ""
+        }`}
+      >
 
         {mapEmbedUrl ? (
 
           <iframe
             src={mapEmbedUrl}
             title="Lokasi Showroom MobilKu"
-            className="block h-[290px] w-full border-0 sm:h-[330px] lg:h-[355px]"
+            className="block w-full border-0"
+            style={{
+              // OpenStreetMap: peta dibuat 28px lebih tinggi dari kotaknya,
+              // jadi baris tulisan di paling bawah tersembunyi
+              height: isOsm ? "calc(100% + 28px)" : "100%",
+            }}
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
           />
@@ -607,26 +621,34 @@ const ShowroomMap = () => {
         </p>
 
       </div>
+{/* MAP LINK + KETERANGAN SUMBER PETA */}
+      <div className="flex shrink-0 flex-col items-end gap-1">
 
-      {/* MAP LINK */}
-      {settings?.alamat && (
+        {settings?.alamat && (
+          <a
+            href={mapsUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-2 text-[10px] font-semibold text-[#F4D58D] transition-all duration-300 hover:text-white sm:text-[11px]"
+          >
+            <span>Lihat Peta</span>
+            <span className="text-sm">↗</span>
+          </a>
+        )}
 
-        
-         <a href={mapsUrl}
-          target="_blank"
-          rel="noreferrer"
-          className="inline-flex shrink-0 items-center gap-2 text-[10px] font-semibold text-[#F4D58D] transition-all duration-300 hover:text-white sm:text-[11px]"
-        >
+        {/* ← BARU: keterangan sumber (wajib untuk OpenStreetMap) */}
+        {isOsm && (
+          <a
+            href="https://www.openstreetmap.org/copyright"
+            target="_blank"
+            rel="noreferrer"
+            className="text-[9px] text-[#FBF3E9]/45 transition-colors hover:text-[#F4D58D] sm:text-[10px]"
+          >
+            Peta © <span className="text-[#F4D58D]/75">OpenStreetMap</span>
+          </a>
+        )}
 
-          <span>Lihat Peta</span>
-
-          <span className="text-sm">
-            ↗
-          </span>
-
-        </a>
-
-      )}
+      </div>
 
     </div>
 
