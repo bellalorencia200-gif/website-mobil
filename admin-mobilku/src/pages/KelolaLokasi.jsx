@@ -168,6 +168,10 @@ const KelolaLokasi = () => {
     },
   ];
 
+  // ← BARU: kalau peta dari OpenStreetMap, baris tulisan bawaannya disembunyikan
+  // di pratinjau (sama seperti tampilan di website)
+  const isOsm = mapEmbedUrl.includes("openstreetmap.org");
+
   // Link WhatsApp otomatis dari nomor (08xx -> 628xx)
   const nomorWa = whatsapp.replace(/\D/g, "").replace(/^0/, "62");
   const linkWa = nomorWa ? `https://wa.me/${nomorWa}` : "";
@@ -272,11 +276,11 @@ const KelolaLokasi = () => {
               {/* Link Maps */}
               <div>
                 <label className="flex items-center gap-2 text-xs font-bold text-gray-700 mb-2">
-                  <FaMapMarkedAlt className="text-[#8f1117]" /> Link Embed Google Maps
+                  <FaMapMarkedAlt className="text-[#8f1117]" /> Link Embed Peta
                 </label>
                 <input
                   type="text"
-                  placeholder="https://www.google.com/maps/embed?pb=..."
+                  placeholder="https://www.google.com/maps/embed?pb=... atau https://www.openstreetmap.org/export/embed?..."
                   className="input w-full h-11 rounded-xl bg-[#FBF8F4] border-[#EADFD2] text-[#1c0a0b] placeholder:text-gray-400 focus:outline-none focus:border-[#D9A85C] font-mono text-xs"
                   value={mapEmbedUrl}
                   onChange={(e) => setMapEmbedUrl(e.target.value)}
@@ -284,7 +288,7 @@ const KelolaLokasi = () => {
                 <p className="flex items-start gap-1.5 text-[11px] text-gray-500 mt-2 leading-relaxed">
                   <FaInfoCircle className="text-[#C27C0E] mt-0.5 shrink-0" />
                   <span>
-                    Ambil dari Google Maps &gt; <b>Share</b> &gt; <b>Embed a map</b>, lalu salin link di dalam <code className="text-[10px] bg-[#F5F0EA] px-1 rounded">src="..."</code>
+                    Google Maps: <b>Share</b> &gt; <b>Embed a map</b>. OpenStreetMap: <b>Share</b> &gt; <b>HTML</b>. Salin link di dalam <code className="text-[10px] bg-[#F5F0EA] px-1 rounded">src="..."</code>
                   </span>
                 </p>
               </div>
@@ -362,7 +366,9 @@ const KelolaLokasi = () => {
                 <iframe
                   src={mapEmbedUrl}
                   title="Peta lokasi showroom"
-                  className="w-full h-full border-0"
+                  className={`w-full border-0 contrast-[1.08] saturate-[1.15] ${
+                    isOsm ? "h-[calc(100%+48px)]" : "h-full"
+                  }`}
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
                 />
@@ -370,7 +376,7 @@ const KelolaLokasi = () => {
                 <div className="w-full h-full flex flex-col items-center justify-center text-center px-6">
                   <FaMapMarkedAlt className="text-3xl text-[#C27C0E] mb-2" />
                   <p className="text-sm font-bold text-gray-600">Peta belum tersedia</p>
-                  <p className="text-[11px] text-gray-400 mt-0.5">Isi link embed Google Maps untuk menampilkan peta</p>
+                  <p className="text-[11px] text-gray-400 mt-0.5">Isi link embed Google Maps / OpenStreetMap untuk menampilkan peta</p>
                 </div>
               )}
             </div>
