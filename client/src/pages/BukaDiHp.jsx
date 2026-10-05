@@ -234,6 +234,11 @@ function BukaDiHp() {
     .map((item) => ({ ...item, href: buatLink(item.kunci, settings) }))
     .filter((item) => item.href);
 
+
+    // Link aplikasi dari admin ("" kalau belum diisi)
+  const playStoreUrl = buatLink("playStoreUrl", settings);
+  const appStoreUrl = buatLink("appStoreUrl", settings);
+
   return (
     <>
       <Navbar />
@@ -293,16 +298,38 @@ function BukaDiHp() {
                 ))}
               </div>
 
-              {/* Store Badges */}
+                            {/* Store Badges (link dari admin) */}
               <div className="mt-8 flex flex-wrap items-center justify-center gap-3 lg:justify-start">
-                <a href="#playstore" className="inline-block transition hover:opacity-90">
+                <a
+                  href={playStoreUrl || "#"}
+                  target={playStoreUrl ? "_blank" : undefined}
+                  rel={playStoreUrl ? "noopener noreferrer" : undefined}
+                  onClick={(e) => {
+                    if (!playStoreUrl) e.preventDefault();
+                  }}
+                  aria-label="Download MobilKu di Google Play"
+                  className={`inline-block transition ${
+                    playStoreUrl ? "hover:opacity-90" : "cursor-default"
+                  }`}
+                >
                   <img
                     src={playstore}
                     alt="Get it on Google Play"
                     className="h-10 w-auto sm:h-11"
                   />
                 </a>
-                <a href="#appstore" className="inline-block transition hover:opacity-90">
+                <a
+                  href={appStoreUrl || "#"}
+                  target={appStoreUrl ? "_blank" : undefined}
+                  rel={appStoreUrl ? "noopener noreferrer" : undefined}
+                  onClick={(e) => {
+                    if (!appStoreUrl) e.preventDefault();
+                  }}
+                  aria-label="Download MobilKu di App Store"
+                  className={`inline-block transition ${
+                    appStoreUrl ? "hover:opacity-90" : "cursor-default"
+                  }`}
+                >
                   <img
                     src={appstore}
                     alt="Download on App Store"

@@ -50,7 +50,7 @@ const keFormat62 = (nomor) =>
 // 628xx -> 08xx (untuk ditampilkan ke pengunjung)
 const keFormat08 = (nomor) => nomor.replace(/^62/, "0");
 
-// Rapikan link media sosial (tambah https:// kalau belum ada)
+// Rapikan link media sosial & aplikasi (tambah https:// kalau belum ada)
 const rapikanLink = (link) => {
   const teks = String(link || "").trim();
   if (!teks) return "";
@@ -80,5 +80,7 @@ export default function useSettings() {
     facebookUrl: rapikanLink(settings?.facebookUrl),
     instagramUrl: rapikanLink(settings?.instagramUrl),
     telegramUrl: rapikanLink(settings?.telegramUrl),
+    playStoreUrl: rapikanLink(settings?.playStoreUrl), // BARU ("" kalau belum diisi)
+    appStoreUrl: rapikanLink(settings?.appStoreUrl), // BARU ("" kalau belum diisi)
   };
 }
