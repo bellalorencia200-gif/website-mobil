@@ -14,6 +14,9 @@ import {
   FaTelegramPlane,
   FaShareAlt,
   FaExternalLinkAlt,
+  FaGooglePlay,
+  FaApple,
+  FaMobileAlt,
 } from "react-icons/fa";
 
 const KelolaLokasi = () => {
@@ -26,6 +29,10 @@ const KelolaLokasi = () => {
   const [facebookUrl, setFacebookUrl] = useState("");
   const [instagramUrl, setInstagramUrl] = useState("");
   const [telegramUrl, setTelegramUrl] = useState("");
+
+  // ===== Link aplikasi (BARU) =====
+  const [playStoreUrl, setPlayStoreUrl] = useState("");
+  const [appStoreUrl, setAppStoreUrl] = useState("");
 
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -44,6 +51,8 @@ const KelolaLokasi = () => {
           setFacebookUrl(settings.facebookUrl || "");
           setInstagramUrl(settings.instagramUrl || "");
           setTelegramUrl(settings.telegramUrl || "");
+          setPlayStoreUrl(settings.playStoreUrl || ""); // BARU
+          setAppStoreUrl(settings.appStoreUrl || ""); // BARU
         }
         setIsLoading(false);
       })
@@ -108,6 +117,56 @@ const KelolaLokasi = () => {
         setIsSubmitting(false);
       });
   };
+
+  // ===== BARU: Simpan khusus link aplikasi (data lain tidak ikut terkirim, jadi tidak berubah) =====
+  const handleSimpanAplikasi = (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    axios
+      .put(
+        "/api/settings",
+        { playStoreUrl, appStoreUrl },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      )
+      .then((response) => {
+        const s = response.data.settings;
+        if (s) {
+          setPlayStoreUrl(s.playStoreUrl || "");
+          setAppStoreUrl(s.appStoreUrl || "");
+        }
+        alert("link aplikasi berhasil di update");
+        setIsSubmitting(false);
+      })
+      .catch((error) => {
+        alert(error.response?.data?.message || "gagal update link aplikasi");
+        setIsSubmitting(false);
+      });
+  };
+
+  // ===== BARU: daftar link aplikasi =====
+  const daftarAplikasi = [
+    {
+      nama: "Google Play Store",
+      Icon: FaGooglePlay,
+      warna: "bg-gradient-to-br from-[#34A853] via-[#4285F4] to-[#EA4335]",
+      nilai: playStoreUrl,
+      setNilai: setPlayStoreUrl,
+      placeholder: "https://play.google.com/store/apps/details?id=...",
+    },
+    {
+      nama: "Apple App Store",
+      Icon: FaApple,
+      warna: "bg-black",
+      nilai: appStoreUrl,
+      setNilai: setAppStoreUrl,
+      placeholder: "https://apps.apple.com/id/app/...",
+    },
+  ];
 
   // Link WhatsApp otomatis dari nomor (08xx -> 628xx)
   const nomorWa = whatsapp.replace(/\D/g, "").replace(/^0/, "62");
@@ -440,6 +499,74 @@ const KelolaLokasi = () => {
             </p>
             <button className="btn bg-gradient-to-r from-[#a5161d] to-[#5f0a0d] text-white border-[#8f1117] hover:from-[#8f1117] hover:to-[#4d0a0d] rounded-xl px-6 w-full sm:w-auto shadow-[0_10px_22px_-10px_rgba(143,17,23,0.7)]">
               <FaSave className="text-xs text-[#F6D47A]" /> Simpan Media Sosial
+            </button>
+          </div>
+        </form>
+
+        {/* ==================================================
+            LINK APLIKASI (BARU)
+        ================================================== */}
+        <form
+          onSubmit={handleSimpanAplikasi}
+          className="relative mt-5 overflow-hidden rounded-[24px] bg-white ring-1 ring-[#EADFD2] shadow-[0_18px_45px_-28px_rgba(80,30,20,0.45)]"
+        >
+          <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-[#8f1117] via-[#E0A82E] to-[#5f0a0d]" />
+
+          <div className="flex items-center gap-3 px-5 md:px-6 pt-6 pb-4 border-b border-[#F3ECE3]">
+            <span className="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#b3141c] to-[#4a080b] text-white flex items-center justify-center shadow-[0_10px_20px_-8px_rgba(143,17,23,0.6)]">
+              <FaMobileAlt />
+            </span>
+            <div>
+              <h2 className="font-black text-[#1c0a0b] leading-tight">Link Aplikasi</h2>
+              <p className="text-[11px] text-gray-500">
+                Link ini dipakai tombol Google Play &amp; App Store di footer dan halaman Dapatkan Aplikasi
+              </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 px-5 md:px-6 py-5">
+            {daftarAplikasi.map(({ nama, Icon, warna, nilai, setNilai, placeholder }) => (
+              <div key={nama} className="rounded-2xl bg-[#FBF8F4] ring-1 ring-[#F1E8DE] p-4">
+                <div className="flex items-center justify-between gap-2 mb-3">
+                  <div className="flex items-center gap-2.5">
+                    <span className={`w-9 h-9 rounded-xl text-white flex items-center justify-center ${warna}`}>
+                      <Icon className="text-sm" />
+                    </span>
+                    <p className="text-sm font-black text-[#1c0a0b]">{nama}</p>
+                  </div>
+                  {nilai.trim() ? (
+                    <a
+                      href={/^https?:\/\//i.test(nilai.trim()) ? nilai.trim() : `https://${nilai.trim()}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-[10px] font-bold text-[#047857] bg-[#10B981]/10 px-2.5 py-1 rounded-full hover:bg-[#10B981]/20"
+                    >
+                      Aktif <FaExternalLinkAlt className="text-[8px]" />
+                    </a>
+                  ) : (
+                    <span className="text-[10px] font-bold text-[#B45309] bg-[#F59E0B]/10 px-2.5 py-1 rounded-full">
+                      Segera hadir
+                    </span>
+                  )}
+                </div>
+                <input
+                  type="text"
+                  placeholder={placeholder}
+                  className="input w-full h-11 rounded-xl bg-white border-[#EADFD2] text-[#1c0a0b] placeholder:text-gray-400 focus:outline-none focus:border-[#D9A85C] text-xs"
+                  value={nilai}
+                  onChange={(e) => setNilai(e.target.value)}
+                />
+              </div>
+            ))}
+          </div>
+
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-5 md:px-6 py-4 border-t border-[#F3ECE3] bg-[#FDFBF8]">
+            <p className="flex items-start gap-1.5 text-[11px] text-gray-500">
+              <FaInfoCircle className="text-[#C27C0E] mt-0.5 shrink-0" />
+              Kosongkan link jika aplikasi belum rilis, tombolnya tampil dengan tulisan "Segera hadir".
+            </p>
+            <button className="btn bg-gradient-to-r from-[#a5161d] to-[#5f0a0d] text-white border-[#8f1117] hover:from-[#8f1117] hover:to-[#4d0a0d] rounded-xl px-6 w-full sm:w-auto shadow-[0_10px_22px_-10px_rgba(143,17,23,0.7)]">
+              <FaSave className="text-xs text-[#F6D47A]" /> Simpan Link Aplikasi
             </button>
           </div>
         </form>
