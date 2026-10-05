@@ -537,7 +537,7 @@ const ShowroomMap = () => {
             // OpenStreetMap: peta dibuat lebih tinggi dari kotaknya supaya
             // baris tulisan di paling bawah tersembunyi.
             // HP: tulisan jadi 2 baris → potong 48px. Desktop: 1 baris → 28px.
-            className={`block w-full border-0 ${
+            className={`block w-full border-0 contrast-[1.08] saturate-[1.15] ${
               isOsm
                 ? "h-[calc(100%+48px)] sm:h-[calc(100%+28px)]"
                 : "h-full"
